@@ -27,11 +27,18 @@
             app:layout_widthPercent="60%"/>
 
         <ListView
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/content_lv"
             android:layout_toRightOf="@id/content_lv"
             android:id="@+id/content_label"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:layout_width="0dp"
             app:layout_widthPercent="40%"
-            android:layout_height="match_parent" />
+            android:background="@color/white"
+            android:layout_height="match_parent"
+
+            android:divider="@color/transparents"/>
     </android.support.percent.PercentRelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

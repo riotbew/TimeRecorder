@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    >
+    android:layout_margin="5dp">
 
     <TextView
+        android:id="@+id/event_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/event_name"
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:background="@color/white"
-        android:text="吃喝玩乐"/>
+        android:paddingLeft="15dp"
+        android:paddingStart="15dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="吃喝玩乐"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        tools:ignore="RtlSymmetry" />
 
 </FrameLayout>

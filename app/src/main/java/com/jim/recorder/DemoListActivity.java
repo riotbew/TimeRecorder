@@ -32,6 +32,7 @@ public class DemoListActivity extends AppCompatActivity implements View.OnClickL
             item = demo_content.getChildAt(i);
             item.setOnClickListener(this);
         }
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     @Override
@@ -44,6 +45,8 @@ public class DemoListActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(it);
                 break;
             case R.id.demo2:
+                it = new Intent(this, ProfitCalcActivity.class);
+                startActivity(it);
                 break;
         }
     }

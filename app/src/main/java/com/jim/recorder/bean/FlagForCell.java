@@ -6,9 +6,19 @@ public class FlagForCell {
 
     private long date;
 
+    private boolean isSelected=false;
+
     public FlagForCell(int position, long date) {
         this.position = position;
         this.date = date;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public int getPosition() {

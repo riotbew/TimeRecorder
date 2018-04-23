@@ -27,7 +27,7 @@
             app:layout_widthPercent="60%"/>
 
         <ListView
-            android:layout_marginTop="10dp"
+            android:paddingTop="10dp"
             android:layout_toEndOf="@id/content_lv"
             android:layout_toRightOf="@id/content_lv"
             android:id="@+id/content_label"

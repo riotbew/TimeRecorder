@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,21 +24,20 @@ import java.util.Calendar;
 
 import static com.jim.recorder.bean.Constants.MONTH_NAME;
 import static com.jim.recorder.bean.Constants.WEEK_NAME;
+import static com.jim.recorder.bean.Constants.one_day;
+import static com.jim.recorder.bean.Constants.one_hour;
+import static com.jim.recorder.bean.Constants.one_min;
+import static com.jim.recorder.bean.Constants.timezone;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
 
-    long one_min = 60000;
-    long one_s = 1000;
-    long one_hour = 3600000;
-    long one_day = 86400000;
-    long timezone = 28800000;
-
     ListView lv;
     ListView lb;
     ArrayList<Data> data1 = new ArrayList<>();
     ArrayList<EventType> data2 = new ArrayList<>();
+
     TextView content_res;
     int mPosition = 0;
     Calendar now;
@@ -46,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        now = Calendar.getInstance();
-        now_start = getCalendarDayStart(now).getTimeInMillis();
         setContentView(R.layout.activity_main);
         init();
     }
@@ -55,12 +53,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        setTimeZone();
+        now_start = getCalendarDayStart(Calendar.getInstance()).getTimeInMillis();
         now = Calendar.getInstance();
-        now_start = getCalendarDayStart(now).getTimeInMillis();
-        Log.e(TAG, String.valueOf(now_start));
+    }
+
+    private void setTimeZone() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(0);
+        timezone = calendar.get(Calendar.HOUR_OF_DAY) * one_hour + calendar.get(Calendar.MINUTE) * one_min;
+        if (calendar.get(Calendar.YEAR) != 1970) {
+            timezone = one_day - timezone;
+        }
     }
 
     private void init() {
+        setTimeZone();
+        now = Calendar.getInstance();
+        now_start = getCalendarDayStart(Calendar.getInstance()).getTimeInMillis();
+
         lv = findViewById(R.id.content_lv);
         lb = findViewById(R.id.content_label);
         content_res = findViewById(R.id.content_res);
@@ -69,30 +80,54 @@ public class MainActivity extends AppCompatActivity {
         lv.setAdapter(new CommonAdapter<Data>(this, R.layout.layout_main_lv, data1) {
             @Override
             protected void convert(ViewHolder viewHolder, final Data item, int position) {
-                View view = null;
+                ViewGroup labelContainer = null;
                 viewHolder.getConvertView().setClickable(false);
                 LinearLayout content = viewHolder.getView(R.id.day_content);
                 if (content.getChildCount() == 0) {
                     for (int i = 0; i < 24; i++) {
-                        view = LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_hour_item, content,false);
-                        ((TextView)view.findViewById(R.id.day_time)).setText(i+":00");
-                        view.findViewById(R.id.label_time_0).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                view.setBackgroundColor(R.color.orange_color);
-                            }
-                        });
-                        content.addView(view);
+                        labelContainer = (ViewGroup) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_hour_item, content,false);
+                        TextView tv = labelContainer.findViewById(R.id.day_time);
+                        tv.setText(i+":00");
+                        View child;
+                        for (int j=1; j < labelContainer.getChildCount(); j++) {
+                            child = labelContainer.getChildAt(j);
+                            child.setTag(new FlagForCell(j-1,item.getTime()));
+                            child.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    FlagForCell cell;
+                                    if (v.getTag() != null && v.getTag() instanceof FlagForCell) {
+                                        cell = (FlagForCell)v.getTag();
+                                        if (cell.isSelected()) {
+                                            v.setBackgroundColor(MainActivity.this.getResources().getColor(R.color.cell_origin));
+                                            cell.setSelected(false);
+                                        } else {
+                                            cell.setSelected(true);
+                                            v.setBackgroundColor(R.color.orange_color);
+                                        }
+
+                                    }
+                                }
+                            });
+                        }
+                        content.addView(labelContainer);
                     }
                 }
                 long date = item.getTime();
+
                 if (now_start == date) {
                     viewHolder.getView(R.id.day_divider).setVisibility(View.VISIBLE);
                 } else {
                     viewHolder.getView(R.id.day_divider).setVisibility(View.GONE);
                 }
                 calendar.setTimeInMillis(date);
-                viewHolder.setText(R.id.main_mon, MONTH_NAME[calendar.get(Calendar.MONTH)]);
+                TextView text_mon = viewHolder.getView(R.id.main_mon);
+                if (calendar.get(Calendar.MONTH) > 9) {
+                    text_mon.setTextSize(11);
+                } else {
+                    text_mon.setTextSize(16);
+                }
+                text_mon.setText(MONTH_NAME[calendar.get(Calendar.MONTH)]);
                 viewHolder.setText(R.id.main_date, calendar.get(Calendar.DATE)+"");
                 viewHolder.setText(R.id.main_day, WEEK_NAME[calendar.get(Calendar.DAY_OF_WEEK)]);
             }
@@ -116,7 +151,14 @@ public class MainActivity extends AppCompatActivity {
                 lv.setSelection(mPosition);
             }
         });
-
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_label_footer, lb,false);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "I am footer", Toast.LENGTH_SHORT).show();
+            }
+        });
+        lb.addFooterView(view);
     }
 
     private void preData() {
@@ -128,11 +170,11 @@ public class MainActivity extends AppCompatActivity {
         end.set(end.get(Calendar.YEAR)+1, 0, 1);
         end = getCalendarDayStart(end);
 
-        for (long i=start.getTimeInMillis();i <= end.getTimeInMillis(); i+=one_day) {
+        for (long i=start.getTimeInMillis();i < end.getTimeInMillis(); i+=one_day) {
             data1.add(new Data(i));
         }
         long now_time = getCalendarDayStart(now).getTimeInMillis();
-        mPosition = Long.valueOf((now_time - start.getTimeInMillis())/one_day).intValue();
+        mPosition = Long.valueOf((now_time - start.getTimeInMillis()+timezone)/one_day).intValue();
 
         data2.add(new EventType("吃", 1, R.color.blue));
         data2.add(new EventType("喝",2, R.color.orange_color));
@@ -167,8 +209,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Calendar getCalendarDayStart(Calendar param) {
-        param.setTimeInMillis(param.getTimeInMillis() - param.getTimeInMillis()%one_day - timezone+one_day);
-        return param;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis((param.getTimeInMillis() - param.getTimeInMillis()%one_day)-timezone);
+        return calendar;
     }
 
 

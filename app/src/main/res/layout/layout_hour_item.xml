@@ -18,7 +18,7 @@
     <View
         android:id="@+id/label_time_0"
         android:layout_width="0dp"
-        android:layout_height="17dp"
+        android:layout_height="20dp"
         android:layout_margin="1dp"
         android:focusable="true"
         android:clickable="true"
@@ -27,7 +27,7 @@
     <View
         android:id="@+id/label_time_15"
         android:layout_width="0dp"
-        android:layout_height="17dp"
+        android:layout_height="20dp"
         android:layout_margin="1dp"
         android:focusable="true"
         android:clickable="true"
@@ -36,7 +36,7 @@
     <View
         android:id="@+id/label_time_30"
         android:layout_width="0dp"
-        android:layout_height="17dp"
+        android:layout_height="20dp"
         android:layout_margin="1dp"
         android:focusable="true"
         android:clickable="true"
@@ -45,7 +45,7 @@
     <View
         android:id="@+id/label_time_45"
         android:layout_width="0dp"
-        android:layout_height="17dp"
+        android:layout_height="20dp"
         android:layout_margin="1dp"
         android:focusable="true"
         android:clickable="true"

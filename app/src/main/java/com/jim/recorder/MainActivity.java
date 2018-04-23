@@ -4,20 +4,21 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.LongSparseArray;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jim.recorder.abslistview.CommonAdapter;
 import com.jim.recorder.abslistview.ViewHolder;
+import com.jim.recorder.bean.Cell;
 import com.jim.recorder.bean.Data;
 import com.jim.recorder.bean.EventType;
-import com.jim.recorder.bean.FlagForCell;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     ListView lb;
     ArrayList<Data> data1 = new ArrayList<>();
     ArrayList<EventType> data2 = new ArrayList<>();
+    LongSparseArray<SparseArray<Cell>> mStorage = new LongSparseArray<>();
 
     TextView content_res;
     int mPosition = 0;
@@ -67,6 +69,99 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void handleCell(View v, Data item, Object position) {
+        if (position == null) {
+            return;
+        }
+        int pos = (Integer) position;
+        long timeOfDay = item.getTime();
+        SparseArray<Cell> cells = mStorage.get(timeOfDay);
+        Cell cell = null;
+        if (cells == null) {
+            cells = new SparseArray<>();
+            cell = new Cell(true, pos);
+            cells.put(pos, cell);
+            mStorage.put(timeOfDay, cells);
+        } else {
+            cell = cells.get(pos);
+            if (cell == null) {
+                cell = new Cell(true, pos);
+                cells.put(pos, cell);
+            } else {
+                cell.setSelected(!cell.isSelected());
+            }
+        }
+        if (cell.isSelected()) {
+            v.setBackgroundColor(R.color.colorPrimaryDark);
+        } else {
+            v.setBackgroundColor(getResources().getColor(R.color.cell_origin));
+        }
+
+    }
+
+    private void resetDayItem(View parent, final Data item, int position) {
+
+        ViewGroup content = parent.findViewById(R.id.day_content);
+        ViewGroup labelContainer = null;
+        if (content.getChildCount() == 0) {
+            for (int i = 0; i < 24; i++) {
+                labelContainer = (ViewGroup) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_hour_item, content,false);
+                TextView tv = labelContainer.findViewById(R.id.day_time);
+                tv.setText(i+":00");
+                View child;
+                for (int j=1; j < labelContainer.getChildCount(); j++) {
+                    child = labelContainer.getChildAt(j);
+                    child.setTag((i) * 4 + j);
+                    child.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            handleCell(v, item, v.getTag());
+                        }
+                    });
+                }
+                content.addView(labelContainer);
+            }
+        } else {
+            for (int i = 0; i < 24; i++) {
+                labelContainer = (ViewGroup) content.getChildAt(i);
+                View child;
+                for (int j = 1; labelContainer!= null && j < labelContainer.getChildCount(); j++) {
+                    child = labelContainer.getChildAt(j);
+                    child.setBackgroundColor(MainActivity.this.getResources().getColor(R.color.cell_origin));
+                }
+            }
+        }
+    }
+
+    private void updateDayItem(ViewGroup parent, Data item) {
+        ViewGroup content = parent.findViewById(R.id.day_content);
+        SparseArray<Cell> cells = mStorage.get(item.getTime());
+        Cell cell;
+        ViewGroup labelContainer;
+        View label;
+        if (content != null) {
+            for (int i=0; i< 24; i++) {
+                labelContainer = (ViewGroup) content.getChildAt(i);
+                for (int j = 1; j < 5; j++) {
+                    cell = cells.get((i) * 4 + j);
+                    label = labelContainer.getChildAt(j);
+                    if (cell != null && label != null) {
+                        if (cell.isSelected()){
+                            label.setBackgroundColor( R.color.colorPrimaryDark);
+                        } else {
+                            if (cell.getType() == -1) {
+                                label.setBackgroundColor(getResources().getColor(R.color.cell_origin));
+                            } else {
+                                //TODO 填充颜色
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private void init() {
         setTimeZone();
         now = Calendar.getInstance();
@@ -80,41 +175,18 @@ public class MainActivity extends AppCompatActivity {
         lv.setAdapter(new CommonAdapter<Data>(this, R.layout.layout_main_lv, data1) {
             @Override
             protected void convert(ViewHolder viewHolder, final Data item, int position) {
-                ViewGroup labelContainer = null;
-                viewHolder.getConvertView().setClickable(false);
-                LinearLayout content = viewHolder.getView(R.id.day_content);
-                if (content.getChildCount() == 0) {
-                    for (int i = 0; i < 24; i++) {
-                        labelContainer = (ViewGroup) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_hour_item, content,false);
-                        TextView tv = labelContainer.findViewById(R.id.day_time);
-                        tv.setText(i+":00");
-                        View child;
-                        for (int j=1; j < labelContainer.getChildCount(); j++) {
-                            child = labelContainer.getChildAt(j);
-                            child.setTag(new FlagForCell(j-1,item.getTime()));
-                            child.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    FlagForCell cell;
-                                    if (v.getTag() != null && v.getTag() instanceof FlagForCell) {
-                                        cell = (FlagForCell)v.getTag();
-                                        if (cell.isSelected()) {
-                                            v.setBackgroundColor(MainActivity.this.getResources().getColor(R.color.cell_origin));
-                                            cell.setSelected(false);
-                                        } else {
-                                            cell.setSelected(true);
-                                            v.setBackgroundColor(R.color.orange_color);
-                                        }
-
-                                    }
-                                }
-                            });
-                        }
-                        content.addView(labelContainer);
+                ViewGroup container = (ViewGroup)viewHolder.getConvertView();
+                ViewGroup content = container.findViewById(R.id.day_content);
+                if (mStorage.get(item.getTime()) == null) {
+                    resetDayItem(container, item, position);
+                } else {
+                    if (content.getChildCount() == 0) {
+                        resetDayItem(container, item, position);
                     }
+                    updateDayItem((ViewGroup) viewHolder.getConvertView(), item);
                 }
+                // 左边title
                 long date = item.getTime();
-
                 if (now_start == date) {
                     viewHolder.getView(R.id.day_divider).setVisibility(View.VISIBLE);
                 } else {

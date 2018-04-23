@@ -54,7 +54,7 @@
         app:layout_widthPercent="80%"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@color/colorAccent">
+        android:clickable="false">
     </LinearLayout>
 
 </android.support.percent.PercentRelativeLayout>

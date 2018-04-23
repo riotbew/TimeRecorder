@@ -5,22 +5,21 @@ package com.jim.recorder.bean;
  */
 
 public class Cell {
-    private boolean isChoosen = false;
-    private int type;
-    private long date;
+    private boolean isSelected = false;
+    private int type = -1;
+    private int position;
 
-    public Cell(boolean isChoosen, int type, long date) {
-        this.isChoosen = isChoosen;
-        this.type = type;
-        this.date = date;
+    public Cell(boolean isSelected, int position) {
+        this.isSelected = isSelected;
+        this.position = position;
     }
 
-    public boolean isChoosen() {
-        return isChoosen;
+    public boolean isSelected() {
+        return isSelected;
     }
 
-    public void setChoosen(boolean choosen) {
-        isChoosen = choosen;
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public int getType() {
@@ -31,11 +30,11 @@ public class Cell {
         this.type = type;
     }
 
-    public long getDate() {
-        return date;
+    public long getPosition() {
+        return position;
     }
 
-    public void setDate(long date) {
-        this.date = date;
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

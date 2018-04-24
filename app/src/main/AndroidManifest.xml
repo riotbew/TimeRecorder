@@ -21,6 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ProfitCalcActivity"/>
+
+        <activity android:name=".LabelManagerActivity"/>
     </application>
 
 </manifest>

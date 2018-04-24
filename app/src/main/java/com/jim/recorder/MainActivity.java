@@ -1,9 +1,9 @@
 package com.jim.recorder;
 
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jim.recorder.abslistview.CommonAdapter;
 import com.jim.recorder.abslistview.ViewHolder;
@@ -69,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //处理点击cell点击事件
     private void handleCell(View v, Data item, Object position) {
         if (position == null) {
             return;
@@ -92,13 +92,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if (cell.isSelected()) {
-            v.setBackgroundColor(R.color.colorPrimaryDark);
+            v.setBackground(getResources().getDrawable(R.mipmap.cell_selected));
         } else {
             v.setBackgroundColor(getResources().getColor(R.color.cell_origin));
         }
-
     }
 
+    //重置每一天的数据
     private void resetDayItem(View parent, final Data item, int position) {
 
         ViewGroup content = parent.findViewById(R.id.day_content);
@@ -128,12 +128,20 @@ public class MainActivity extends AppCompatActivity {
                 for (int j = 1; labelContainer!= null && j < labelContainer.getChildCount(); j++) {
                     child = labelContainer.getChildAt(j);
                     child.setBackgroundColor(MainActivity.this.getResources().getColor(R.color.cell_origin));
+                    //每次更新数据都需要重置点击事件，否则点击的时候拿到数据就有问题
+                    child.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            handleCell(v, item, v.getTag());
+                        }
+                    });
                 }
             }
         }
     }
 
-    private void updateDayItem(ViewGroup parent, Data item) {
+    //更新数据
+    private void updateDayItem(ViewGroup parent, final Data item) {
         ViewGroup content = parent.findViewById(R.id.day_content);
         SparseArray<Cell> cells = mStorage.get(item.getTime());
         Cell cell;
@@ -145,17 +153,27 @@ public class MainActivity extends AppCompatActivity {
                 for (int j = 1; j < 5; j++) {
                     cell = cells.get((i) * 4 + j);
                     label = labelContainer.getChildAt(j);
-                    if (cell != null && label != null) {
-                        if (cell.isSelected()){
-                            label.setBackgroundColor( R.color.colorPrimaryDark);
-                        } else {
-                            if (cell.getType() == -1) {
-                                label.setBackgroundColor(getResources().getColor(R.color.cell_origin));
+                    if (label != null) {
+                        if (cell != null) {
+                            if (cell.isSelected()){
+                                label.setBackground(getResources().getDrawable(R.mipmap.cell_selected));
                             } else {
-                                //TODO 填充颜色
+                                if (cell.getType() == -1) {
+                                    label.setBackgroundColor(getResources().getColor(R.color.cell_origin));
+                                } else {
+                                    //TODO 填充颜色
+                                }
                             }
-
+                        } else {
+                            label.setBackgroundColor(getResources().getColor(R.color.cell_origin));
                         }
+                        //每次更新数据都需要重置点击事件，否则点击的时候拿到数据就有问题
+                        label.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                handleCell(v, item, v.getTag());
+                            }
+                        });
                     }
                 }
             }
@@ -178,12 +196,12 @@ public class MainActivity extends AppCompatActivity {
                 ViewGroup container = (ViewGroup)viewHolder.getConvertView();
                 ViewGroup content = container.findViewById(R.id.day_content);
                 if (mStorage.get(item.getTime()) == null) {
-                    resetDayItem(container, item, position);
+                    resetDayItem(container, data1.get(position), position);
                 } else {
                     if (content.getChildCount() == 0) {
-                        resetDayItem(container, item, position);
+                        resetDayItem(container, data1.get(position), position);
                     }
-                    updateDayItem((ViewGroup) viewHolder.getConvertView(), item);
+                    updateDayItem((ViewGroup) viewHolder.getConvertView(), data1.get(position));
                 }
                 // 左边title
                 long date = item.getTime();
@@ -227,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "I am footer", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, LabelManagerActivity.class));
             }
         });
         lb.addFooterView(view);
@@ -285,6 +303,4 @@ public class MainActivity extends AppCompatActivity {
         calendar.setTimeInMillis((param.getTimeInMillis() - param.getTimeInMillis()%one_day)-timezone);
         return calendar;
     }
-
-
 }

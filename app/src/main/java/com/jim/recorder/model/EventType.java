@@ -1,4 +1,4 @@
-package com.jim.recorder.bean;
+package com.jim.recorder.model;
 
 import android.support.annotation.ColorInt;
 

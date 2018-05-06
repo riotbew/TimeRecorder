@@ -6,7 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+
+import com.jim.recorder.ui.view.MainActivity;
 
 /**
  * Created by Tauren on 2018/4/19.

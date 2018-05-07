@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
-import com.jim.recorder.R;
-import com.jim.recorder.abslistview.ViewHolder;
 import com.jim.recorder.model.Cell;
 import com.jim.recorder.model.Data;
 import com.jim.recorder.model.EventType;
@@ -27,6 +25,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
     private ArrayList<Data> data1 = new ArrayList<>();
     private ArrayList<EventType> data2 = new ArrayList<>();
     private LongSparseArray<SparseArray<Cell>> mStorage = new LongSparseArray<>();
+    private LongSparseArray<ArrayList<Integer>> mSelects= new LongSparseArray<>();
     private Calendar now;
 
     public void setTimeZone() {
@@ -42,6 +41,11 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         return data1;
     }
 
+    public EventType getEventType(int pos) {
+        return data2.get(pos);
+    }
+
+    @SuppressWarnings("all")
     public void initViewData() {
         Calendar start = Calendar.getInstance();
         start.set(start.get(Calendar.YEAR)-2, 0, 1);
@@ -57,36 +61,31 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         long now_time = getCalendarDayStart(now).getTimeInMillis();
         getView().todayPosition(Long.valueOf((now_time - start.getTimeInMillis()+timezone)/one_day).intValue());
 
-        data2.add(new EventType("吃", 1, R.color.blue));
-        data2.add(new EventType("喝",2, R.color.orange_color));
-        data2.add(new EventType("玩",3,R.color.colorPrimaryDark));
-        data2.add(new EventType("乐",4, R.color.colorPrimary));
-        data2.add(new EventType("睡觉",5, R.color.colorAccent));
-        data2.add(new EventType("吃", 1, R.color.blue));
-        data2.add(new EventType("喝",2, R.color.orange_color));
-        data2.add(new EventType("玩",3,R.color.colorPrimaryDark));
-        data2.add(new EventType("乐",4, R.color.colorPrimary));
-        data2.add(new EventType("睡觉",5, R.color.colorAccent));
-        data2.add(new EventType("吃", 1, R.color.blue));
-        data2.add(new EventType("喝",2, R.color.orange_color));
-        data2.add(new EventType("玩",3,R.color.colorPrimaryDark));
-        data2.add(new EventType("乐",4, R.color.colorPrimary));
-        data2.add(new EventType("睡觉",5, R.color.colorAccent));
-        data2.add(new EventType("吃", 1, R.color.blue));
-        data2.add(new EventType("喝",2, R.color.orange_color));
-        data2.add(new EventType("玩",3,R.color.colorPrimaryDark));
-        data2.add(new EventType("乐",4, R.color.colorPrimary));
-        data2.add(new EventType("睡觉",5, R.color.colorAccent));
-        data2.add(new EventType("吃", 1, R.color.blue));
-        data2.add(new EventType("喝",2, R.color.orange_color));
-        data2.add(new EventType("玩",3,R.color.colorPrimaryDark));
-        data2.add(new EventType("乐",4, R.color.colorPrimary));
-        data2.add(new EventType("睡觉",5, R.color.colorAccent));
-        data2.add(new EventType("吃", 1, R.color.blue));
-        data2.add(new EventType("喝",2, R.color.orange_color));
-        data2.add(new EventType("玩",3,R.color.colorPrimaryDark));
-        data2.add(new EventType("乐",4, R.color.colorPrimary));
-        data2.add(new EventType("睡觉",5, R.color.colorAccent));
+        data2.add(new EventType("吃", 1));
+        data2.add(new EventType("喝",2));
+        data2.add(new EventType("玩",3));
+        data2.add(new EventType("乐",4));
+        data2.add(new EventType("睡觉",5));
+        data2.add(new EventType("吃", 1));
+        data2.add(new EventType("喝",2));
+        data2.add(new EventType("玩",3));
+        data2.add(new EventType("乐",4));
+        data2.add(new EventType("睡觉",5));
+        data2.add(new EventType("吃", 1));
+        data2.add(new EventType("喝",2));
+        data2.add(new EventType("玩",3));
+        data2.add(new EventType("乐",4));
+        data2.add(new EventType("睡觉",5));
+        data2.add(new EventType("吃", 1));
+        data2.add(new EventType("喝",2));
+        data2.add(new EventType("玩",3));
+        data2.add(new EventType("乐",4));
+        data2.add(new EventType("睡觉",5));
+        data2.add(new EventType("吃", 1));
+        data2.add(new EventType("喝",2));
+        data2.add(new EventType("玩",3));
+        data2.add(new EventType("乐",4));
+        data2.add(new EventType("睡觉",5));
     }
 
     public ArrayList<EventType> getLabelData() {
@@ -97,6 +96,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         now = Calendar.getInstance();
     }
 
+    @SuppressWarnings("all")
     public void handleLeftClick(View v, Data item, Object position) {
         if (position == null) {
             return;
@@ -119,13 +119,26 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
                 cell.setSelected(!cell.isSelected());
             }
         }
+        //储存已经选择
+        ArrayList<Integer> selects = mSelects.get(timeStamp);
+        if (cell.isSelected()) {
+            if (selects == null) {
+                selects = new ArrayList<>(5);
+            }
+            selects.add(pos);
+            mSelects.append(timeStamp, selects);
+        } else {
+            if (selects != null) {
+                if (selects.indexOf(pos) != -1){
+                    selects.remove(selects.indexOf(pos));
+                }
+            }
+        }
         getView().updateCellAfterClick(v,cell);
     }
 
-    public void handleDayCellRender(ViewHolder viewHolder, final Data item, int position) {
-        ViewGroup container = (ViewGroup)viewHolder.getConvertView();
-        ViewGroup content = container.findViewById(R.id.day_content);
-
+    @SuppressWarnings("all")
+    public void handleDayCellRender(ViewGroup content, final Data item, int position) {
         if (mStorage.get(item.getTime()) == null) {
             getView().resetLeftDayCellView(content, data1.get(position));
         } else {
@@ -134,6 +147,43 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
             }
             getView().updateLeftDayCellView(content, data1.get(position),mStorage.get(item.getTime()));
         }
+    }
+
+    /**
+     * 取消所有选择
+     */
+    public void cancelSelected() {
+        fixSelected(-1);
+    }
+
+    /**
+     * 锚定颜色
+     */
+    @SuppressWarnings("all")
+    public void fixSelected(int type) {
+        ArrayList<Integer> selects;
+        SparseArray<Cell> cells;
+        Cell cell;
+        long key;
+        for (int i =0; i< mSelects.size(); i++) {
+            key = mSelects.keyAt(i);
+            selects = mSelects.get(key);
+            cells = mStorage.get(key);
+            if (cells != null) {
+                for (int j = 0; j < selects.size(); j++) {
+                    cell = cells.get(selects.get(j));
+                    if (cell != null) {
+                        cell.setSelected(false);
+                        if (type != -1) {
+                            cell.setType(type);
+                        }
+                    }
+
+                }
+            }
+            mSelects.remove(key);
+        }
+        getView().refreshLeft();
     }
 
 }

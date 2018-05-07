@@ -14,4 +14,5 @@ public interface MainView extends MvpView {
     void updateCellAfterClick(View v, Cell cell);
     void resetLeftDayCellView(ViewGroup content,final Data item);
     void updateLeftDayCellView(ViewGroup content, final Data item, SparseArray<Cell> cells);
+    void refreshLeft();
 }

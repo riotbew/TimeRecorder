@@ -17,6 +17,7 @@ import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.jim.recorder.ui.callback.MainView;
 import com.jim.recorder.ui.pressenter.MainPressenter;
 import com.jim.recorder.utils.CalendarUtil;
+import com.jim.recorder.utils.ColorUtil;
 import com.jim.recorder.utils.DensityUtil;
 import com.jim.recorder.LabelManagerActivity;
 import com.jim.recorder.R;
@@ -42,6 +43,7 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
     int mPosition = 0;
     Calendar now;
     long now_start;
+    CommonAdapter leftAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,14 +82,17 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
     private void initView() {
         lv = findViewById(R.id.content_lv);
         lb = findViewById(R.id.content_label);
-        lv.setAdapter(new CommonAdapter<Data>(this, R.layout.layout_main_lv, getPresenter().getViewData()) {
+        leftAdapter = new CommonAdapter<Data>(this, R.layout.layout_main_lv, getPresenter().getViewData()) {
             @Override
             protected void convert(ViewHolder viewHolder, final Data item, int position) {
-                getPresenter().handleDayCellRender(viewHolder,item,position);
+                ViewGroup container = (ViewGroup)viewHolder.getConvertView();
+                ViewGroup content = container.findViewById(R.id.day_content);
+                getPresenter().handleDayCellRender(content,item,position);
                 // 左边title页面绘制
                 renderLeftTitle(viewHolder, item);
             }
-        });
+        };
+        lv.setAdapter(leftAdapter);
         lv.setSelection(mPosition);
         lv.setVerticalScrollBarEnabled(false);
         //
@@ -97,7 +102,7 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
                 TextView tv = viewHolder.getView(R.id.event_name);
                 tv.setText(item.getName());
                 GradientDrawable bg = new GradientDrawable();
-                bg.setColor(getResources().getColor(item.getColor()));
+                bg.setColor(getColorByRes(ColorUtil.getColor(item.getType())));
                 bg.setCornerRadius(DensityUtil.dip2px(MainActivity.this,13));
                 tv.setBackground(bg);
             }
@@ -106,7 +111,12 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
         lb.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                lv.setSelection(mPosition);
+                if (pos == 0) {
+                    getPresenter().fixSelected(-1);
+                } else {
+                    getPresenter().fixSelected(getPresenter().getEventType(pos).getType());
+                }
+
             }
         });
         //lb底部标签管理器
@@ -163,8 +173,20 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
         if (cell.isSelected()) {
             v.setBackground(getResources().getDrawable(R.mipmap.cell_selected));
         } else {
-            v.setBackgroundColor(getResources().getColor(R.color.cell_origin));
+            //TODO 填充颜色
+             if (cell.getType() != -1)
+                v.setBackgroundColor(getColorByRes(ColorUtil.getColor(cell.getType())));
+            else
+                setCellOriginBg(v);
         }
+    }
+
+    private void setCellOriginBg(View v) {
+        v.setBackground(getResources().getDrawable(R.drawable.cell_min_bg));
+    }
+
+    private int getColorByRes(int color) {
+        return getResources().getColor(color);
     }
 
     /**
@@ -199,7 +221,7 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
                 View child;
                 for (int j = 1; labelContainer!= null && j < labelContainer.getChildCount(); j++) {
                     child = labelContainer.getChildAt(j);
-                    child.setBackgroundColor(MainActivity.this.getResources().getColor(R.color.cell_origin));
+                    setCellOriginBg(child);
                     //每次更新数据都需要重置点击事件，否则点击的时候拿到数据就有问题
                     child.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -229,13 +251,14 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
                                 label.setBackground(getResources().getDrawable(R.mipmap.cell_selected));
                             } else {
                                 if (cell.getType() == -1) {
-                                    label.setBackgroundColor(getResources().getColor(R.color.cell_origin));
+                                    setCellOriginBg(label);
                                 } else {
                                     //TODO 填充颜色
+                                    label.setBackgroundColor(getColorByRes(ColorUtil.getColor(cell.getType())));
                                 }
                             }
                         } else {
-                            label.setBackgroundColor(getResources().getColor(R.color.cell_origin));
+                            setCellOriginBg(label);
                         }
                         //每次更新数据都需要重置点击事件，否则点击的时候拿到数据就有问题
                         label.setOnClickListener(new View.OnClickListener() {
@@ -248,5 +271,10 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
                 }
             }
         }
+    }
+
+    @Override
+    public void refreshLeft() {
+        leftAdapter.notifyDataSetChanged();
     }
 }

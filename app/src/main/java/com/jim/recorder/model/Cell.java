@@ -1,9 +1,5 @@
 package com.jim.recorder.model;
 
-/**
- * Created by Tauren on 2018/4/20.
- */
-
 public class Cell {
     private boolean isSelected = false;
     private int type = -1;

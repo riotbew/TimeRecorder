@@ -61,31 +61,20 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         long now_time = getCalendarDayStart(now).getTimeInMillis();
         getView().todayPosition(Long.valueOf((now_time - start.getTimeInMillis()+timezone)/one_day).intValue());
 
-        data2.add(new EventType("吃", 1));
-        data2.add(new EventType("喝",2));
-        data2.add(new EventType("玩",3));
-        data2.add(new EventType("乐",4));
-        data2.add(new EventType("睡觉",5));
-        data2.add(new EventType("吃", 1));
-        data2.add(new EventType("喝",2));
-        data2.add(new EventType("玩",3));
-        data2.add(new EventType("乐",4));
-        data2.add(new EventType("睡觉",5));
-        data2.add(new EventType("吃", 1));
-        data2.add(new EventType("喝",2));
-        data2.add(new EventType("玩",3));
-        data2.add(new EventType("乐",4));
-        data2.add(new EventType("睡觉",5));
-        data2.add(new EventType("吃", 1));
-        data2.add(new EventType("喝",2));
-        data2.add(new EventType("玩",3));
-        data2.add(new EventType("乐",4));
-        data2.add(new EventType("睡觉",5));
-        data2.add(new EventType("吃", 1));
-        data2.add(new EventType("喝",2));
-        data2.add(new EventType("玩",3));
-        data2.add(new EventType("乐",4));
-        data2.add(new EventType("睡觉",5));
+        // 替换成对应初始化
+        data2.add(new EventType("上班", 0));
+        data2.add(new EventType("学习",12));
+        data2.add(new EventType("阅读",6));
+        data2.add(new EventType("购物",4));
+        data2.add(new EventType("运动",7));
+        data2.add(new EventType("聚会", 19));
+        data2.add(new EventType("睡觉",26));
+        data2.add(new EventType("洗漱",4));
+        data2.add(new EventType("在路上",11));
+        data2.add(new EventType("写作",18));
+        data2.add(new EventType("休息", 10));
+        data2.add(new EventType("闲聊",9));
+        data2.add(new EventType("吃饭",2));
     }
 
     public ArrayList<EventType> getLabelData() {
@@ -181,8 +170,8 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
 
                 }
             }
-            mSelects.remove(key);
         }
+        mSelects.clear();
         getView().refreshLeft();
     }
 

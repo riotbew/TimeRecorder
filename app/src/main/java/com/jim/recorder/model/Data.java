@@ -8,19 +8,10 @@ import java.util.LinkedList;
 
 public class Data {
 
-    LinkedList<Cell> list;
     long time;
 
     public Data(long time) {
         this.time = time;
-    }
-
-    public LinkedList<Cell> getList() {
-        return list;
-    }
-
-    public void setList(LinkedList<Cell> list) {
-        this.list = list;
     }
 
     public long getTime() {

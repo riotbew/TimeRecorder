@@ -1,7 +1,5 @@
 package com.jim.recorder.model;
 
-import java.util.LinkedList;
-
 /**
  * Created by Tauren on 2018/4/20.
  */

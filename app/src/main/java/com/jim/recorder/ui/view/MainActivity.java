@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
+import com.jim.recorder.model.DayCell;
 import com.jim.recorder.ui.callback.MainView;
 import com.jim.recorder.ui.pressenter.MainPressenter;
 import com.jim.recorder.utils.CalendarUtil;
@@ -235,7 +236,7 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
     }
 
     @Override
-    public void updateLeftDayCellView(ViewGroup content, final Data item, SparseArray<Cell> cells) {
+    public void updateLeftDayCellView(ViewGroup content, final Data item, DayCell cells) {
         Cell cell;
         ViewGroup labelContainer;
         View label;

@@ -1,13 +1,14 @@
 package com.jim.recorder.ui.pressenter;
 
 import android.util.LongSparseArray;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import com.jim.recorder.api.DataStorage;
 import com.jim.recorder.model.Cell;
 import com.jim.recorder.model.Data;
+import com.jim.recorder.model.DayCell;
 import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.callback.MainView;
 
@@ -24,7 +25,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
 
     private ArrayList<Data> data1 = new ArrayList<>();
     private ArrayList<EventType> data2 = new ArrayList<>();
-    private LongSparseArray<SparseArray<Cell>> mStorage = new LongSparseArray<>();
+    private LongSparseArray<DayCell> mStorage = new LongSparseArray<>();
     private LongSparseArray<ArrayList<Integer>> mSelects= new LongSparseArray<>();
     private Calendar now;
 
@@ -92,10 +93,10 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         }
         int pos = (Integer) position;
         long timeStamp = item.getTime();
-        SparseArray<Cell> cells = mStorage.get(timeStamp);
+        DayCell cells = mStorage.get(timeStamp);
         Cell cell = null;
         if (cells == null) {
-            cells = new SparseArray<>();
+            cells = new DayCell(timeStamp);
             cell = new Cell(true, pos);
             cells.put(pos, cell);
             mStorage.put(timeStamp, cells);
@@ -134,7 +135,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
             if (content.getChildCount() == 0) {
                 getView().resetLeftDayCellView(content, data1.get(position));
             }
-            getView().updateLeftDayCellView(content, data1.get(position),mStorage.get(item.getTime()));
+            getView().updateLeftDayCellView(content, data1.get(position), mStorage.get(item.getTime()));
         }
     }
 
@@ -151,7 +152,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
     @SuppressWarnings("all")
     public void fixSelected(int type) {
         ArrayList<Integer> selects;
-        SparseArray<Cell> cells;
+        DayCell cells;
         Cell cell;
         long key;
         for (int i =0; i< mSelects.size(); i++) {
@@ -173,6 +174,6 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         }
         mSelects.clear();
         getView().refreshLeft();
+        DataStorage.saveRecordData(mStorage);
     }
-
 }

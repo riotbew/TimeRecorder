@@ -2,9 +2,20 @@ package com.jim.recorder.model;
 
 import android.util.SparseArray;
 
+import org.greenrobot.greendao.annotation.Convert;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+
+import java.util.List;
+
+@Entity
 public class DayCell {
 
+    @Id
+    private long id;
     private long time;
+
+    @Convert(converter = DayConverter.class, columnType = String.class)
     private SparseArray<Cell> datas = new SparseArray<>();
 
     public DayCell(long time) {

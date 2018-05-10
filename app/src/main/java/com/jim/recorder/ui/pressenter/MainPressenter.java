@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.jim.recorder.api.DataStorage;
 import com.jim.recorder.model.Cell;
+import com.jim.recorder.model.Constants;
 import com.jim.recorder.model.Data;
 import com.jim.recorder.model.DayCell;
 import com.jim.recorder.model.EventType;
@@ -15,9 +16,6 @@ import com.jim.recorder.ui.callback.MainView;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static com.jim.recorder.model.Constants.one_day;
-import static com.jim.recorder.model.Constants.one_hour;
-import static com.jim.recorder.model.Constants.one_min;
 import static com.jim.recorder.model.Constants.timezone;
 import static com.jim.recorder.utils.CalendarUtil.getCalendarDayStart;
 
@@ -32,9 +30,9 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
     public void setTimeZone() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(0);
-        timezone = calendar.get(Calendar.HOUR_OF_DAY) * one_hour + calendar.get(Calendar.MINUTE) * one_min;
+        timezone = calendar.get(Calendar.HOUR_OF_DAY) * Constants.one_hour + calendar.get(Calendar.MINUTE) * Constants.one_min;
         if (calendar.get(Calendar.YEAR) != 1970) {
-            timezone = one_day - timezone;
+            timezone = Constants.one_day - timezone;
         }
     }
 
@@ -56,11 +54,11 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         end.set(end.get(Calendar.YEAR)+1, 0, 1);
         end = getCalendarDayStart(end);
 
-        for (long i=start.getTimeInMillis();i < end.getTimeInMillis(); i+=one_day) {
+        for (long i=start.getTimeInMillis();i < end.getTimeInMillis(); i+=Constants.one_day) {
             data1.add(new Data(i));
         }
         long now_time = getCalendarDayStart(now).getTimeInMillis();
-        getView().todayPosition(Long.valueOf((now_time - start.getTimeInMillis()+timezone)/one_day).intValue());
+        getView().todayPosition(Long.valueOf((now_time - start.getTimeInMillis()+timezone)/Constants.one_day).intValue());
 
         // 替换成对应初始化
         data2.add(new EventType("上班", 0));

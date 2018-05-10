@@ -37,6 +37,6 @@ dependencies {
 
 greendao {
     schemaVersion 1
-    daoPackage 'com.zgl.greentest.gen'
+    daoPackage 'com.jim.green.gen'
     targetGenDir 'src/main/java'
 }

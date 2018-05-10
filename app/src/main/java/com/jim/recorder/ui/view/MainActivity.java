@@ -56,7 +56,7 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
         now_start = getCalendarDayStart(Calendar.getInstance()).getTimeInMillis();
 
         setContentView(R.layout.activity_main);
-        preData();
+        preData( );
         initView();
     }
 

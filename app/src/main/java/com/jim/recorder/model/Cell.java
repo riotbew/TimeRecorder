@@ -24,6 +24,11 @@ public class Cell {
         this.position = position;
     }
 
+    public Cell(int type, int position) {
+        this.type = type;
+        this.position = position;
+    }
+
     @Generated(hash = 739260143)
     public Cell() {
     }

@@ -1,6 +1,7 @@
 package com.jim.recorder.ui.pressenter;
 
 import android.util.LongSparseArray;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -74,6 +75,8 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         data2.add(new EventType("休息", 10));
         data2.add(new EventType("闲聊",9));
         data2.add(new EventType("吃饭",2));
+
+        mStorage = DataStorage.getRecordData();
     }
 
     public ArrayList<EventType> getLabelData() {
@@ -153,6 +156,8 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         DayCell cells;
         Cell cell;
         long key;
+        LongSparseArray<DayCell> needUpdates = new LongSparseArray<>();
+
         for (int i =0; i< mSelects.size(); i++) {
             key = mSelects.keyAt(i);
             selects = mSelects.get(key);
@@ -164,6 +169,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
                         cell.setSelected(false);
                         if (type != -1) {
                             cell.setType(type);
+                            needUpdates.put(key, cells);
                         }
                     }
 
@@ -172,6 +178,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         }
         mSelects.clear();
         getView().refreshLeft();
-        DataStorage.saveRecordData(mStorage);
+        DataStorage.saveRecordData(needUpdates);
+
     }
 }

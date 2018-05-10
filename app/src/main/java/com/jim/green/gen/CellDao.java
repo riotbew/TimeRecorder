@@ -1,4 +1,4 @@
-package com.zgl.greentest.gen;
+package com.jim.green.gen;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;

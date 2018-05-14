@@ -16,4 +16,7 @@ public interface MainView extends MvpView {
     void resetLeftDayCellView(ViewGroup content,final Data item);
     void updateLeftDayCellView(ViewGroup content, final Data item, DayCell cells);
     void refreshLeft();
+    void labelCoverWarning(int type);
+    void updateSelectIndicator(int count);
+    void labelWipeWarning();
 }

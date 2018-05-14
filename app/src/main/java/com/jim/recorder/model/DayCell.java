@@ -6,7 +6,6 @@ import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 
-import java.util.List;
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity

@@ -1,12 +1,13 @@
 package com.jim.recorder.ui.pressenter;
 
+import android.content.Context;
 import android.util.LongSparseArray;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.jim.recorder.api.DataStorage;
+import com.jim.recorder.model.CategoryType;
 import com.jim.recorder.model.Cell;
 import com.jim.recorder.model.Constants;
 import com.jim.recorder.model.Data;
@@ -16,16 +17,19 @@ import com.jim.recorder.ui.callback.MainView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import static com.jim.recorder.model.Constants.timezone;
 import static com.jim.recorder.utils.CalendarUtil.getCalendarDayStart;
 
 public class MainPressenter extends MvpBasePresenter<MainView> {
 
-    private ArrayList<Data> data1 = new ArrayList<>();
-    private ArrayList<EventType> data2 = new ArrayList<>();
+    private ArrayList<Data> mViewDatas = new ArrayList<>();
+    private List<EventType> mEvents = new ArrayList<>();
+    private List<CategoryType> mCategoryTypes = new ArrayList<>();
     private LongSparseArray<DayCell> mStorage = new LongSparseArray<>();
     private LongSparseArray<ArrayList<Integer>> mSelects= new LongSparseArray<>();
+    private int mSelectCount = 0;
     private Calendar now;
 
     public void setTimeZone() {
@@ -38,15 +42,15 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
     }
 
     public ArrayList<Data> getViewData() {
-        return data1;
+        return mViewDatas;
     }
 
     public EventType getEventType(int pos) {
-        return data2.get(pos);
+        return mEvents.get(pos);
     }
 
     @SuppressWarnings("all")
-    public void initViewData() {
+    public void initViewData(Context context) {
         Calendar start = Calendar.getInstance();
         start.set(start.get(Calendar.YEAR)-2, 0, 1);
         start = getCalendarDayStart(start);
@@ -56,31 +60,21 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         end = getCalendarDayStart(end);
 
         for (long i=start.getTimeInMillis();i < end.getTimeInMillis(); i+=Constants.one_day) {
-            data1.add(new Data(i));
+            mViewDatas.add(new Data(i));
         }
         long now_time = getCalendarDayStart(now).getTimeInMillis();
         getView().todayPosition(Long.valueOf((now_time - start.getTimeInMillis()+timezone)/Constants.one_day).intValue());
 
-        // 替换成对应初始化
-        data2.add(new EventType("上班", 0));
-        data2.add(new EventType("学习",12));
-        data2.add(new EventType("阅读",6));
-        data2.add(new EventType("购物",4));
-        data2.add(new EventType("运动",7));
-        data2.add(new EventType("聚会", 19));
-        data2.add(new EventType("睡觉",26));
-        data2.add(new EventType("洗漱",4));
-        data2.add(new EventType("在路上",11));
-        data2.add(new EventType("写作",18));
-        data2.add(new EventType("休息", 10));
-        data2.add(new EventType("闲聊",9));
-        data2.add(new EventType("吃饭",2));
+        // 事件列表
+        mEvents = DataStorage.getEventList();
 
         mStorage = DataStorage.getRecordData();
+
+        mCategoryTypes = DataStorage.getCategoryTypes(context);
     }
 
-    public ArrayList<EventType> getLabelData() {
-        return data2;
+    public List<EventType> getLabelData() {
+        return mEvents;
     }
 
     public void updateTime() {
@@ -118,25 +112,28 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
             }
             selects.add(pos);
             mSelects.append(timeStamp, selects);
+            mSelectCount += 1;
         } else {
             if (selects != null) {
                 if (selects.indexOf(pos) != -1){
                     selects.remove(selects.indexOf(pos));
+                    mSelectCount -= 1;
                 }
             }
         }
         getView().updateCellAfterClick(v,cell);
+        getView().updateSelectIndicator(mSelectCount);
     }
 
     @SuppressWarnings("all")
     public void handleDayCellRender(ViewGroup content, final Data item, int position) {
         if (mStorage.get(item.getTime()) == null) {
-            getView().resetLeftDayCellView(content, data1.get(position));
+            getView().resetLeftDayCellView(content, mViewDatas.get(position));
         } else {
             if (content.getChildCount() == 0) {
-                getView().resetLeftDayCellView(content, data1.get(position));
+                getView().resetLeftDayCellView(content, mViewDatas.get(position));
             }
-            getView().updateLeftDayCellView(content, data1.get(position), mStorage.get(item.getTime()));
+            getView().updateLeftDayCellView(content, mViewDatas.get(position), mStorage.get(item.getTime()));
         }
     }
 
@@ -145,6 +142,14 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
      */
     public void cancelSelected() {
         fixSelected(-1);
+    }
+
+    public void wipeData(boolean showWarning) {
+        if (judgeStatus() && showWarning) {
+            getView().labelWipeWarning();
+            return;
+        }
+        cancelSelected();
     }
 
     /**
@@ -177,8 +182,63 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
             }
         }
         mSelects.clear();
+        mSelectCount =  0;
         getView().refreshLeft();
         DataStorage.saveRecordData(needUpdates);
+    }
 
+    public String toFormatTime(int pCount) {
+        int count = pCount*15;
+        int hour = count/60;
+        int min = count%60;
+        StringBuilder content = new StringBuilder();
+        content.append("选择了");
+        if (hour != 0) {
+            content.append(hour).append("小时");
+        }
+        if (min != 0) {
+            content.append(min).append("分钟");
+        }
+        return content.toString();
+    }
+
+    /**
+     * 判断是否会覆盖原有数据
+     * @return YES:有覆盖;NO:没有
+     */
+    public boolean judgeStatus() {
+        if (mSelects.size() ==0 ) {
+            return false;
+        }
+        ArrayList<Integer> selects;
+        DayCell cells;
+        Cell cell;
+        long key;
+        for (int i =0; i< mSelects.size(); i++) {
+            key = mSelects.keyAt(i);
+            selects = mSelects.get(key);
+            cells = mStorage.get(key);
+            if (cells != null) {
+                for (int j = 0; j < selects.size(); j++) {
+                    cell = cells.get(selects.get(j));
+                    if (cell != null) {
+                        cell.setSelected(false);
+                        if (cell.getType() != -1) {
+                            return true;
+                        }
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
+
+    public void judgeStatus(int type) {
+        if (judgeStatus()) {
+            getView().labelCoverWarning(type);
+        } else {
+            fixSelected(type);
+        }
     }
 }

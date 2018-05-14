@@ -8,4 +8,22 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!--&lt;!&ndash;对话框按钮文字颜色&ndash;&gt;-->
+        <!--<item name="colorAccent">#FFCC00</item>-->
+        <!--&lt;!&ndash;对话框内容文字颜色&ndash;&gt;-->
+        <!--<item name="android:textColorPrimary">#FFFFFF</item>-->
+        <!--&lt;!&ndash;对话框背景色&ndash;&gt;-->
+        <!--<item name="android:background">#5fa3d0</item>-->
+    </style>
+
+    <style name="BottomDialog" parent="@style/Base.V7.Theme.AppCompat.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    <style name="BottomDialog.Animation" parent="Animation.AppCompat.Dialog">
+        <item name="android:windowEnterAnimation">@anim/translate_dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/translate_dialog_out</item>
+    </style>
+
 </resources>

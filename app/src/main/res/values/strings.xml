@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TimeRecorder</string>
+    <string-array name="categories">
+        <item>健身,Fitness</item>
+        <item>散步,Jogging</item>
+        <item>投资理财,Fund</item>
+    </string-array>
 </resources>

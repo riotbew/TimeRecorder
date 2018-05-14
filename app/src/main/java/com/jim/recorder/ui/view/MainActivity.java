@@ -1,39 +1,39 @@
 package com.jim.recorder.ui.view;
 
-import android.content.Intent;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.util.LongSparseArray;
-import android.util.SparseArray;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.hannesdorfmann.mosby.mvp.MvpActivity;
+import com.jim.recorder.R;
+import com.jim.recorder.abslistview.CommonAdapter;
+import com.jim.recorder.abslistview.ViewHolder;
+import com.jim.recorder.common.BaseActivity;
+import com.jim.recorder.model.Cell;
+import com.jim.recorder.model.Data;
 import com.jim.recorder.model.DayCell;
+import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.callback.MainView;
 import com.jim.recorder.ui.pressenter.MainPressenter;
 import com.jim.recorder.utils.CalendarUtil;
 import com.jim.recorder.utils.ColorUtil;
 import com.jim.recorder.utils.DensityUtil;
-import com.jim.recorder.LabelManagerActivity;
-import com.jim.recorder.R;
-import com.jim.recorder.abslistview.CommonAdapter;
-import com.jim.recorder.abslistview.ViewHolder;
-import com.jim.recorder.model.Cell;
-import com.jim.recorder.model.Data;
-import com.jim.recorder.model.EventType;
 
 import java.util.Calendar;
 
 import static com.jim.recorder.model.Constants.MONTH_NAME;
 import static com.jim.recorder.model.Constants.WEEK_NAME;
 
-public class MainActivity extends MvpActivity<MainView, MainPressenter> implements MainView {
+public class MainActivity extends BaseActivity<MainView, MainPressenter> implements MainView {
 
     private final String TAG = MainActivity.class.getSimpleName();
 
@@ -54,7 +54,6 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
         setTimeZone();
         now = Calendar.getInstance();
         now_start = getCalendarDayStart(Calendar.getInstance()).getTimeInMillis();
-
         setContentView(R.layout.activity_main);
         preData( );
         initView();
@@ -83,6 +82,7 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
     private void initView() {
         lv = findViewById(R.id.content_lv);
         lb = findViewById(R.id.content_label);
+        //左边数据设置
         leftAdapter = new CommonAdapter<Data>(this, R.layout.layout_main_lv, getPresenter().getViewData()) {
             @Override
             protected void convert(ViewHolder viewHolder, final Data item, int position) {
@@ -96,14 +96,14 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
         lv.setAdapter(leftAdapter);
         lv.setSelection(mPosition);
         lv.setVerticalScrollBarEnabled(false);
-        //
+        //右边标签列表设置
         lb.setAdapter(new CommonAdapter<EventType>(this,R.layout.layout_event_item, getPresenter().getLabelData()) {
             @Override
             protected void convert(ViewHolder viewHolder, EventType item, int position) {
                 TextView tv = viewHolder.getView(R.id.event_name);
                 tv.setText(item.getName());
                 GradientDrawable bg = new GradientDrawable();
-                bg.setColor(getColorByRes(ColorUtil.getColor(item.getType())));
+                bg.setColor(ColorUtil.getColor(MainActivity.this, item.getType()));
                 bg.setCornerRadius(DensityUtil.dip2px(MainActivity.this,13));
                 tv.setBackground(bg);
             }
@@ -113,9 +113,9 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 if (pos == 0) {
-                    getPresenter().fixSelected(-1);
+                    getPresenter().cancelSelected();
                 } else {
-                    getPresenter().fixSelected(getPresenter().getEventType(pos).getType());
+                    getPresenter().judgeStatus(getPresenter().getEventType(pos).getType());
                 }
 
             }
@@ -125,7 +125,14 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LabelManagerActivity.class));
+//                startActivity(new Intent(MainActivity.this, LabelManagerActivity.class));
+                showCustomDialog(null, "haha", null, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(MainActivity.this, "haha",Toast.LENGTH_SHORT).show();
+                    }
+                }, false);
             }
         });
         lb.addFooterView(view);
@@ -152,7 +159,7 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
     }
 
     private void preData() {
-        getPresenter().initViewData();
+        getPresenter().initViewData(this);
     }
 
     private Calendar getCalendarDayStart(Calendar param) {
@@ -176,7 +183,7 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
         } else {
             //TODO 填充颜色
              if (cell.getType() != -1)
-                v.setBackgroundColor(getColorByRes(ColorUtil.getColor(cell.getType())));
+                v.setBackgroundColor(ColorUtil.getColor(this, cell.getType()));
             else
                 setCellOriginBg(v);
         }
@@ -184,10 +191,6 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
 
     private void setCellOriginBg(View v) {
         v.setBackground(getResources().getDrawable(R.drawable.cell_min_bg));
-    }
-
-    private int getColorByRes(int color) {
-        return getResources().getColor(color);
     }
 
     /**
@@ -253,9 +256,8 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
                             } else {
                                 if (cell.getType() == -1) {
                                     setCellOriginBg(label);
-                                } else {
-                                    //TODO 填充颜色
-                                    label.setBackgroundColor(getColorByRes(ColorUtil.getColor(cell.getType())));
+                                } else { //TODO 填充颜色
+                                    label.setBackgroundColor(ColorUtil.getColor(this, cell.getType()));
                                 }
                             }
                         } else {
@@ -277,5 +279,50 @@ public class MainActivity extends MvpActivity<MainView, MainPressenter> implemen
     @Override
     public void refreshLeft() {
         leftAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void labelCoverWarning(final int type) {
+        showCustomDialog(null, "原本标记的内容将被覆盖\n\n是否继续？", "继续", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getPresenter().fixSelected(type);
+                dialog.dismiss();
+            }
+        }, false);
+    }
+
+    @Override
+    public void labelWipeWarning() {
+        showCustomDialog(null, "原本标记的内容将被清除\n\n是否继续？", "继续", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getPresenter().wipeData(false);
+                if (selectIndicator != null)
+                    selectIndicator.dismiss();
+            }
+        }, false);
+    }
+
+    private Snackbar selectIndicator;
+    @Override
+    public void updateSelectIndicator(int count) {
+        if (selectIndicator == null) {
+            selectIndicator = getSnackbar("");
+            selectIndicator.setAction("抹除", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getPresenter().wipeData(true);
+                }
+            });
+        }
+        selectIndicator.setText(getPresenter().toFormatTime(count));
+        if (count == 0) {
+            selectIndicator.dismiss();
+            return;
+        }
+        if (!selectIndicator.isShown()) {
+            selectIndicator.show();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.jim.recorder.utils;
 
+import android.content.Context;
+
 import com.jim.recorder.R;
 
 import java.util.ArrayList;
@@ -51,7 +53,15 @@ public class ColorUtil {
         return colors.get(type);
     }
 
+    public static int getColor(Context context, int type) {
+        return context.getResources().getColor(colors.get(type));
+    }
+
     public static List<Integer> getTemplateColors() {
         return colors;
+    }
+
+    public static int getColorByRes(Context context, int color) {
+        return context.getResources().getColor(color);
     }
 }

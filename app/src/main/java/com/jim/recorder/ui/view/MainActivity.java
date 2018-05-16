@@ -1,7 +1,7 @@
 package com.jim.recorder.ui.view;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -49,7 +49,6 @@ public class MainActivity extends BaseActivity<MainView, MainPressenter> impleme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getPresenter().updateTime();
         setTimeZone();
         now = Calendar.getInstance();
@@ -57,6 +56,12 @@ public class MainActivity extends BaseActivity<MainView, MainPressenter> impleme
         setContentView(R.layout.activity_main);
         preData( );
         initView();
+    }
+
+    @Override
+    protected void setToolBar() {
+        super.setToolBar();
+        setStatusBarColor(getResources().getColor(R.color.tool_bar_bg));
     }
 
     @Override
@@ -125,14 +130,7 @@ public class MainActivity extends BaseActivity<MainView, MainPressenter> impleme
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(MainActivity.this, LabelManagerActivity.class));
-                showCustomDialog(null, "haha", null, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(MainActivity.this, "haha",Toast.LENGTH_SHORT).show();
-                    }
-                }, false);
+                startActivity(new Intent(MainActivity.this, EventManagerActivity.class));
             }
         });
         lb.addFooterView(view);
@@ -279,6 +277,9 @@ public class MainActivity extends BaseActivity<MainView, MainPressenter> impleme
     @Override
     public void refreshLeft() {
         leftAdapter.notifyDataSetChanged();
+        if (selectIndicator != null) {
+            selectIndicator.dismiss();
+        }
     }
 
     @Override
@@ -309,12 +310,12 @@ public class MainActivity extends BaseActivity<MainView, MainPressenter> impleme
     public void updateSelectIndicator(int count) {
         if (selectIndicator == null) {
             selectIndicator = getSnackbar("");
-            selectIndicator.setAction("抹除", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getPresenter().wipeData(true);
-                }
-            });
+//            selectIndicator.setAction("抹除", new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    getPresenter().wipeData(true);
+//                }
+//            });
         }
         selectIndicator.setText(getPresenter().toFormatTime(count));
         if (count == 0) {

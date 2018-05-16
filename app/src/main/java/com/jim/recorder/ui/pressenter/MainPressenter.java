@@ -1,13 +1,14 @@
 package com.jim.recorder.ui.pressenter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.LongSparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.jim.recorder.api.DataStorage;
-import com.jim.recorder.model.CategoryType;
+import com.jim.recorder.api.EventTypeManager;
 import com.jim.recorder.model.Cell;
 import com.jim.recorder.model.Constants;
 import com.jim.recorder.model.Data;
@@ -25,8 +26,7 @@ import static com.jim.recorder.utils.CalendarUtil.getCalendarDayStart;
 public class MainPressenter extends MvpBasePresenter<MainView> {
 
     private ArrayList<Data> mViewDatas = new ArrayList<>();
-    private List<EventType> mEvents = new ArrayList<>();
-    private List<CategoryType> mCategoryTypes = new ArrayList<>();
+
     private LongSparseArray<DayCell> mStorage = new LongSparseArray<>();
     private LongSparseArray<ArrayList<Integer>> mSelects= new LongSparseArray<>();
     private int mSelectCount = 0;
@@ -46,7 +46,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
     }
 
     public EventType getEventType(int pos) {
-        return mEvents.get(pos);
+        return EventTypeManager.getEventList().get(pos);
     }
 
     @SuppressWarnings("all")
@@ -65,16 +65,11 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         long now_time = getCalendarDayStart(now).getTimeInMillis();
         getView().todayPosition(Long.valueOf((now_time - start.getTimeInMillis()+timezone)/Constants.one_day).intValue());
 
-        // 事件列表
-        mEvents = DataStorage.getEventList();
-
         mStorage = DataStorage.getRecordData();
-
-        mCategoryTypes = DataStorage.getCategoryTypes(context);
     }
 
     public List<EventType> getLabelData() {
-        return mEvents;
+        return EventTypeManager.getEventList();
     }
 
     public void updateTime() {

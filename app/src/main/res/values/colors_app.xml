@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="theme_color">#63534e</color>
+    <color name="theme_color_1">#FF6600</color>
+    <color name="orange_color">#FF6600</color>
+    <color name="orange_color2">#ff6600</color>
+    <color name="orange_color_clicked">#fd8331</color>
+
+    <color name="photographt_bg">#E6E4E1</color>
+    <!-- 南瓜色 -->
+    <color name="pumpkin">#FF6600</color>
+    <color name="shiliured">#fd6b58</color>
+    <color name="now_divider">#6e6e78</color>
+    <color name="main_left_title">#5a6e87</color>
+
+
+    <color name="cell_origin">#ebebeb</color>
+    <color name="cell_origin_shadow">#c9c9c9</color>
+    <color name="cell_hour_divider">#545260</color>
+
+    <color name="tool_bar_bg">#3c96e6</color>
+</resources>

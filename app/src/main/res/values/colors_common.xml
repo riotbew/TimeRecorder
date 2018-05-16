@@ -325,22 +325,5 @@
     <color name="half_transparent">#65000000</color>
     <!-- 状态栏深天空蓝色 -->
     <color name="deep_sky_blue">#00A8FF</color>
-    <color name="theme_color">#63534e</color>
-    <color name="theme_color_1">#FF6600</color>
-    <color name="orange_color">#FF6600</color>
-    <color name="orange_color2">#ff6600</color>
-    <color name="orange_color_clicked">#fd8331</color>
-
-    <color name="photographt_bg">#E6E4E1</color>
-    <!-- 南瓜色 -->
-    <color name="pumpkin">#FF6600</color>
-    <color name="shiliured">#fd6b58</color>
-    <color name="now_divider">#6e6e78</color>
-    <color name="main_left_title">#5a6e87</color>
-
-
-    <color name="cell_origin">#ebebeb</color>
-    <color name="cell_origin_shadow">#c9c9c9</color>
-    <color name="cell_hour_divider">#545260</color>
 
 </resources>

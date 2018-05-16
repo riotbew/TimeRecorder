@@ -23,7 +23,7 @@
         </activity>
         <activity android:name=".ProfitCalcActivity"/>
 
-        <activity android:name=".LabelManagerActivity"/>
+        <activity android:name=".ui.view.EventManagerActivity"/>
     </application>
 
 </manifest>

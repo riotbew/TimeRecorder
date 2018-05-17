@@ -7,14 +7,36 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:titleTextColor="@color/white"
-        android:background="@mipmap/tool_bar_main_bg"
-        app:title="事件管理器"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="show snackbar"
-        android:id="@+id/snackbar_action"/>
+        android:background="@mipmap/tool_bar_main_bg">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingRight="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="事件管理页"
+                android:textSize="20sp"
+                android:layout_centerVertical="true"
+                android:textColor="@color/white"/>
+            <ImageView
+                android:id="@+id/tab_add_right"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/icon_tool_bar_add"/>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <ListView
+        android:layout_marginLeft="15dp"
+        android:id="@+id/event_content_lv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+
 </LinearLayout>

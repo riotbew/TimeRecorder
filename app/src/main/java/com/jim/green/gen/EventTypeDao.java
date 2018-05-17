@@ -27,7 +27,9 @@ public class EventTypeDao extends AbstractDao<EventType, Long> {
         public final static Property _id = new Property(0, long.class, "_id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property Type = new Property(2, int.class, "type", false, "TYPE");
-        public final static Property CategoryType = new Property(3, int.class, "categoryType", false, "CATEGORY_TYPE");
+        public final static Property Show = new Property(3, boolean.class, "show", false, "SHOW");
+        public final static Property CategoryType = new Property(4, int.class, "categoryType", false, "CATEGORY_TYPE");
+        public final static Property Position = new Property(5, int.class, "position", false, "POSITION");
     }
 
 
@@ -46,7 +48,9 @@ public class EventTypeDao extends AbstractDao<EventType, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," + // 0: _id
                 "\"NAME\" TEXT," + // 1: name
                 "\"TYPE\" INTEGER NOT NULL ," + // 2: type
-                "\"CATEGORY_TYPE\" INTEGER NOT NULL );"); // 3: categoryType
+                "\"SHOW\" INTEGER NOT NULL ," + // 3: show
+                "\"CATEGORY_TYPE\" INTEGER NOT NULL ," + // 4: categoryType
+                "\"POSITION\" INTEGER NOT NULL );"); // 5: position
     }
 
     /** Drops the underlying database table. */
@@ -65,7 +69,9 @@ public class EventTypeDao extends AbstractDao<EventType, Long> {
             stmt.bindString(2, name);
         }
         stmt.bindLong(3, entity.getType());
-        stmt.bindLong(4, entity.getCategoryType());
+        stmt.bindLong(4, entity.getShow() ? 1L: 0L);
+        stmt.bindLong(5, entity.getCategoryType());
+        stmt.bindLong(6, entity.getPosition());
     }
 
     @Override
@@ -78,7 +84,9 @@ public class EventTypeDao extends AbstractDao<EventType, Long> {
             stmt.bindString(2, name);
         }
         stmt.bindLong(3, entity.getType());
-        stmt.bindLong(4, entity.getCategoryType());
+        stmt.bindLong(4, entity.getShow() ? 1L: 0L);
+        stmt.bindLong(5, entity.getCategoryType());
+        stmt.bindLong(6, entity.getPosition());
     }
 
     @Override
@@ -92,7 +100,9 @@ public class EventTypeDao extends AbstractDao<EventType, Long> {
             cursor.getLong(offset + 0), // _id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
             cursor.getInt(offset + 2), // type
-            cursor.getInt(offset + 3) // categoryType
+            cursor.getShort(offset + 3) != 0, // show
+            cursor.getInt(offset + 4), // categoryType
+            cursor.getInt(offset + 5) // position
         );
         return entity;
     }
@@ -102,7 +112,9 @@ public class EventTypeDao extends AbstractDao<EventType, Long> {
         entity.set_id(cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setType(cursor.getInt(offset + 2));
-        entity.setCategoryType(cursor.getInt(offset + 3));
+        entity.setShow(cursor.getShort(offset + 3) != 0);
+        entity.setCategoryType(cursor.getInt(offset + 4));
+        entity.setPosition(cursor.getInt(offset + 5));
      }
     
     @Override

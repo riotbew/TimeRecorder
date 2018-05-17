@@ -24,6 +24,8 @@
         <activity android:name=".ProfitCalcActivity"/>
 
         <activity android:name=".ui.view.EventManagerActivity"/>
+
+        <activity android:name=".ui.pressenter.AddEventActivity"/>
     </application>
 
 </manifest>

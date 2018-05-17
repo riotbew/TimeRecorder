@@ -1,7 +1,6 @@
 package com.jim.recorder.ui.pressenter;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.LongSparseArray;
 import android.view.View;
 import android.view.ViewGroup;

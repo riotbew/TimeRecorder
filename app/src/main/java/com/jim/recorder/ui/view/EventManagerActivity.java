@@ -1,22 +1,34 @@
 package com.jim.recorder.ui.view;
 
+import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ListView;
 
 import com.jim.recorder.R;
-import com.jim.recorder.common.BaseActivity;
+import com.jim.recorder.abslistview.CommonAdapter;
+import com.jim.recorder.abslistview.ViewHolder;
+import com.jim.recorder.api.EventTypeManager;
+import com.jim.recorder.common.BaseMvpActivity;
+import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.callback.EventManagerView;
+import com.jim.recorder.ui.pressenter.AddEventActivity;
 import com.jim.recorder.ui.pressenter.EventTypePressenter;
+import com.jim.recorder.utils.ColorUtil;
 
 /**
  * Created by Tauren on 2018/4/24.
  */
 
-public class EventManagerActivity extends BaseActivity<EventManagerView, EventTypePressenter> implements EventManagerView{
+public class EventManagerActivity extends BaseMvpActivity<EventManagerView, EventTypePressenter> implements EventManagerView{
+
+    final int ADD_EVENT = 0;
+
+    CommonAdapter mAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,22 +44,43 @@ public class EventManagerActivity extends BaseActivity<EventManagerView, EventTy
     }
 
     private void init() {
-        findViewById(R.id.snackbar_action).setOnClickListener(new View.OnClickListener() {
+        ListView lv = findViewById(R.id.event_content_lv);
+        mAdapter = new CommonAdapter<EventType>(this,R.layout.layout_manager_event_item, EventTypeManager.getEventList()) {
+
             @Override
-            public void onClick(View v) {
-                Snackbar.make(findViewById(android.R.id.content), "haha",Snackbar.LENGTH_SHORT).show();
+            protected void convert(ViewHolder viewHolder, EventType item, int position) {
+                View icon = viewHolder.getView(R.id.event_icon);
+                GradientDrawable bg = (GradientDrawable) icon.getBackground();
+                bg.setColor(ColorUtil.getColor(getContext(), item.getType()));
+                viewHolder.setText(R.id.event_name, item.getName());
             }
-        });
+        };
+        lv.setAdapter(mAdapter);
     }
 
     @Override
-    protected void setToolBar() {
-        super.setToolBar();
+    protected void setToolBar(Toolbar toolBar) {
         setStatusBarColor(getResources().getColor(R.color.tool_bar_bg));
+        toolBar.findViewById(R.id.tab_add_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToAddEvent();
+            }
+        });
+        super.setToolBar(toolBar);
+    }
+
+    private void goToAddEvent() {
+        startActivityForResult(new Intent(this, AddEventActivity.class), ADD_EVENT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void updateEventList() {
-
+        mAdapter.notifyDataSetChanged();
     }
 }

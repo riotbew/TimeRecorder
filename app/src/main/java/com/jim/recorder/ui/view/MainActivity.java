@@ -6,18 +6,18 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jim.recorder.R;
 import com.jim.recorder.abslistview.CommonAdapter;
 import com.jim.recorder.abslistview.ViewHolder;
-import com.jim.recorder.common.BaseActivity;
+import com.jim.recorder.common.BaseMvpActivity;
 import com.jim.recorder.model.Cell;
 import com.jim.recorder.model.Data;
 import com.jim.recorder.model.DayCell;
@@ -33,7 +33,7 @@ import java.util.Calendar;
 import static com.jim.recorder.model.Constants.MONTH_NAME;
 import static com.jim.recorder.model.Constants.WEEK_NAME;
 
-public class MainActivity extends BaseActivity<MainView, MainPressenter> implements MainView {
+public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> implements MainView {
 
     private final String TAG = MainActivity.class.getSimpleName();
 
@@ -59,9 +59,9 @@ public class MainActivity extends BaseActivity<MainView, MainPressenter> impleme
     }
 
     @Override
-    protected void setToolBar() {
-        super.setToolBar();
+    protected void setToolBar(Toolbar toolBar) {
         setStatusBarColor(getResources().getColor(R.color.tool_bar_bg));
+        super.setToolBar(toolBar);
     }
 
     @Override

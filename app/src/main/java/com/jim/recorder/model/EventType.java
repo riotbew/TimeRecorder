@@ -18,19 +18,28 @@ public class EventType {
     private int type = -1;
 
     @Property
+    private boolean show = true;
+
+    @Property
     private int categoryType = -1;
+
+    @Property
+    private int position = -1;
 
     public EventType(String name, int type) {
         this.name = name;
         this.type = type;
     }
 
-    @Generated(hash = 1832760375)
-    public EventType(long _id, String name, int type, int categoryType) {
+    @Generated(hash = 1621229965)
+    public EventType(long _id, String name, int type, boolean show,
+            int categoryType, int position) {
         this._id = _id;
         this.name = name;
         this.type = type;
+        this.show = show;
         this.categoryType = categoryType;
+        this.position = position;
     }
 
     @Generated(hash = 1218244869)
@@ -67,5 +76,25 @@ public class EventType {
 
     public void setCategoryType(int categoryType) {
         this.categoryType = categoryType;
+    }
+
+    public boolean isShow() {
+        return show;
+    }
+
+    public void setShow(boolean show) {
+        this.show = show;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public boolean getShow() {
+        return this.show;
     }
 }

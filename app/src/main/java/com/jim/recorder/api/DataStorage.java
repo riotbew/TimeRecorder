@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.LongSparseArray;
 
-import com.jim.green.gen.CategoryTypeDao;
 import com.jim.recorder.MyApplication;
 import com.jim.recorder.R;
 import com.jim.recorder.model.CategoryType;
@@ -26,8 +25,8 @@ public class DataStorage {
         MyApplication.getDaoInstant().getDayCellDao().insertOrReplaceInTx(dataList);
     }
 
-    public synchronized static void saveRecordData(LongSparseArray<DayCell> data, ArrayList<Long> flag) {
-        ArrayList<DayCell> inputContent = new ArrayList<>();
+    public synchronized static void saveRecordData(LongSparseArray<DayCell> data, List<Long> flag) {
+        List<DayCell> inputContent = new ArrayList<>();
         for (int i=0; i<flag.size(); i++) {
             inputContent.add(data.get(flag.get(i)));
         }
@@ -44,8 +43,12 @@ public class DataStorage {
         return result;
     }
 
-    public synchronized static void saveEventList(ArrayList<EventType> eventTypes) {
+    public synchronized static void saveEventList(List<EventType> eventTypes) {
         MyApplication.getDaoInstant().getEventTypeDao().insertOrReplaceInTx(eventTypes);
+    }
+
+    public synchronized static void addEvent(EventType eventType) {
+        MyApplication.getDaoInstant().getEventTypeDao().insert(eventType);
     }
 
     public synchronized static List<EventType> getEventList() {
@@ -68,6 +71,9 @@ public class DataStorage {
             result.add(new EventType("休息", 10));
             result.add(new EventType("闲聊",9));
             result.add(new EventType("吃饭",2));
+            for (EventType item : result) {
+                DataStorage.addEvent(item);
+            }
         }
         return result;
     }

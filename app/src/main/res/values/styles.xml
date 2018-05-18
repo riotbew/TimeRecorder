@@ -7,7 +7,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="toolbarNavigationButtonStyle">@style/myToolbarNavigationButtonStyle</item>
+        <item name="toolbarNavigationButtonStyle">@style/ToolBarTheme</item>
     </style>
 
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -28,12 +28,23 @@
         <item name="android:windowExitAnimation">@anim/translate_dialog_out</item>
     </style>
 
-    <style name="myToolbarNavigationButtonStyle" parent="@style/Widget.AppCompat.Toolbar.Button.Navigation">
-        <item name="android:paddingLeft">-15dp</item>
-        <item name="android:paddingRight">-20dp</item>
-        <item name="android:paddingTop">10dp</item>
-        <item name="android:paddingBottom">10dp</item>
-        <item name="android:scaleType">centerInside</item>
+    <!-- Toolbar主题设置-->
+    <style name="ToolBarTheme" parent="@style/ThemeOverlay.AppCompat.Dark">
+        <item name="android:textColorSecondary">#ffffff</item>
+        <item name="android:colorBackground">#aa333333</item>
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item> <!--新增一个item，用于控制menu-->
+        <!-- <item name="android:actionOverflowButtonStyle">@style/OverflowButtonStyle</item>-->
+    </style>
+    <!--修改toolbar弹出菜单的位置-->
+    <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>  <!--把该属性改为false即可使menu位置位于toolbar之下-->
+    </style>
+    <!--修改toolbar菜单按钮的style-->
+    <style name="OverflowButtonStyle" parent="@android:style/Widget.ActionButton.Overflow">
+        <item name="android:src">@drawable/icon_tool_bar_add</item>
+    </style>-->
+    <!--toolbar菜单按钮的颜色-->
+    <style name="ActionButton.Overflow" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
     </style>
 
 </resources>

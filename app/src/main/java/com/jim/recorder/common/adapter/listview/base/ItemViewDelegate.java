@@ -1,6 +1,6 @@
-package com.jim.recorder.abslistview.base;
+package com.jim.recorder.common.adapter.listview.base;
 
-import com.jim.recorder.abslistview.ViewHolder;
+import com.jim.recorder.common.adapter.listview.ViewHolder;
 
 public interface ItemViewDelegate<T>
 {

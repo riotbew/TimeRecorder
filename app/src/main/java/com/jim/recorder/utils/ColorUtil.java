@@ -57,6 +57,9 @@ public class ColorUtil {
         return context.getResources().getColor(colors.get(type));
     }
 
+    /**
+     * 应用预设的颜色列表，与事件的type属性对应
+     */
     public static List<Integer> getTemplateColors() {
         return colors;
     }

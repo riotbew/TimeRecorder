@@ -15,9 +15,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jim.recorder.R;
-import com.jim.recorder.abslistview.CommonAdapter;
-import com.jim.recorder.abslistview.ViewHolder;
 import com.jim.recorder.common.BaseMvpActivity;
+import com.jim.recorder.common.adapter.listview.CommonAdapter;
+import com.jim.recorder.common.adapter.listview.ViewHolder;
 import com.jim.recorder.model.Cell;
 import com.jim.recorder.model.Data;
 import com.jim.recorder.model.DayCell;
@@ -117,12 +117,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
         lb.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                if (pos == 0) {
-                    getPresenter().cancelSelected();
-                } else {
-                    getPresenter().judgeStatus(getPresenter().getEventType(pos).getType());
-                }
-
+            getPresenter().judgeStatus(getPresenter().getEventType(pos).getType());
             }
         });
         //lb底部标签管理器

@@ -10,13 +10,12 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.jim.recorder.R;
-import com.jim.recorder.abslistview.CommonAdapter;
-import com.jim.recorder.abslistview.ViewHolder;
 import com.jim.recorder.api.EventTypeManager;
 import com.jim.recorder.common.BaseMvpActivity;
+import com.jim.recorder.common.adapter.listview.CommonAdapter;
+import com.jim.recorder.common.adapter.listview.ViewHolder;
 import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.callback.EventManagerView;
-import com.jim.recorder.ui.pressenter.AddEventActivity;
 import com.jim.recorder.ui.pressenter.EventTypePressenter;
 import com.jim.recorder.utils.ColorUtil;
 
@@ -76,7 +75,7 @@ public class EventManagerActivity extends BaseMvpActivity<EventManagerView, Even
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

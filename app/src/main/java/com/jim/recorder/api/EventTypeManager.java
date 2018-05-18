@@ -14,4 +14,19 @@ public class EventTypeManager {
         }
         return mEvents;
     }
+
+    public static void refreshEvent() {
+        mEvents = DataStorage.getEventList();
+    }
+
+    public synchronized static boolean addEvent(EventType event) {
+        for (EventType item : mEvents) {
+            if (item.getName().equals(event.getName())) {
+                return false;
+            }
+        }
+        mEvents.add(event);
+        DataStorage.addEvent(event);
+        return true;
+    }
 }

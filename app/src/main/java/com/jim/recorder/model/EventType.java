@@ -1,5 +1,7 @@
 package com.jim.recorder.model;
 
+import android.util.LongSparseArray;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Property;
@@ -9,7 +11,7 @@ import org.greenrobot.greendao.annotation.Generated;
 public class EventType {
 
     @Id(autoincrement = true)
-    private long _id;
+    private Long _id;
 
     @Property
     private String name;
@@ -31,8 +33,8 @@ public class EventType {
         this.type = type;
     }
 
-    @Generated(hash = 1621229965)
-    public EventType(long _id, String name, int type, boolean show,
+    @Generated(hash = 244459173)
+    public EventType(Long _id, String name, int type, boolean show,
             int categoryType, int position) {
         this._id = _id;
         this.name = name;
@@ -62,14 +64,6 @@ public class EventType {
         this.type = type;
     }
 
-    public long get_id() {
-        return this._id;
-    }
-
-    public void set_id(long _id) {
-        this._id = _id;
-    }
-
     public int getCategoryType() {
         return categoryType;
     }
@@ -96,5 +90,13 @@ public class EventType {
 
     public boolean getShow() {
         return this.show;
+    }
+
+    public Long get_id() {
+        return this._id;
+    }
+
+    public void set_id(Long _id) {
+        this._id = _id;
     }
 }

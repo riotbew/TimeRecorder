@@ -7,7 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.jim.recorder.ui.pressenter.AddEventActivity;
+import com.jim.recorder.api.DataStorage;
+import com.jim.recorder.model.EventType;
+import com.jim.recorder.ui.view.AddEventActivity;
 import com.jim.recorder.ui.view.EventManagerActivity;
 import com.jim.recorder.ui.view.MainActivity;
 
@@ -35,7 +37,7 @@ public class DemoListActivity extends AppCompatActivity implements View.OnClickL
             item = demo_content.getChildAt(i);
             item.setOnClickListener(this);
         }
-        startActivity(new Intent(this, AddEventActivity.class));
+//        startActivity(new Intent(this, AddEventActivity.class));
     }
 
     @Override

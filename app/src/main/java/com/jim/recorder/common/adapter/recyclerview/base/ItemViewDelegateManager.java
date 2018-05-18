@@ -1,15 +1,14 @@
-package com.jim.recorder.abslistview.base;
+package com.jim.recorder.common.adapter.recyclerview.base;
 
 import android.support.v4.util.SparseArrayCompat;
 
-import com.jim.recorder.abslistview.ViewHolder;
 
 /**
- * Created by Tauren on 2018/4/18.
+ * Created by zhy on 16/6/22.
  */
-
-public class ItemViewDelegateManager<T> {
-    private SparseArrayCompat<ItemViewDelegate<T>> delegates = new SparseArrayCompat();
+public class ItemViewDelegateManager<T>
+{
+    SparseArrayCompat<ItemViewDelegate<T>> delegates = new SparseArrayCompat();
 
     public int getItemViewDelegateCount()
     {
@@ -73,7 +72,7 @@ public class ItemViewDelegateManager<T> {
         for (int i = delegatesCount - 1; i >= 0; i--)
         {
             ItemViewDelegate<T> delegate = delegates.valueAt(i);
-            if (delegate.isForViewType(item, position))
+            if (delegate.isForViewType( item, position))
             {
                 return delegates.keyAt(i);
             }
@@ -89,7 +88,7 @@ public class ItemViewDelegateManager<T> {
         {
             ItemViewDelegate<T> delegate = delegates.valueAt(i);
 
-            if (delegate.isForViewType(item, position))
+            if (delegate.isForViewType( item, position))
             {
                 delegate.convert(holder, item, position);
                 return;
@@ -100,33 +99,18 @@ public class ItemViewDelegateManager<T> {
     }
 
 
+    public ItemViewDelegate getItemViewDelegate(int viewType)
+    {
+        return delegates.get(viewType);
+    }
+
     public int getItemViewLayoutId(int viewType)
     {
-        return delegates.get(viewType).getItemViewLayoutId();
+        return getItemViewDelegate(viewType).getItemViewLayoutId();
     }
 
     public int getItemViewType(ItemViewDelegate itemViewDelegate)
     {
         return delegates.indexOfValue(itemViewDelegate);
-    }
-
-    public ItemViewDelegate getItemViewDelegate(T item, int position)
-    {
-        int delegatesCount = delegates.size();
-        for (int i = delegatesCount - 1; i >= 0; i--)
-        {
-            ItemViewDelegate<T> delegate = delegates.valueAt(i);
-            if (delegate.isForViewType(item, position))
-            {
-                return delegate;
-            }
-        }
-        throw new IllegalArgumentException(
-                "No ItemViewDelegate added that matches position=" + position + " in data source");
-    }
-
-    public int getItemViewLayoutId(T item, int position)
-    {
-        return getItemViewDelegate(item,position).getItemViewLayoutId();
     }
 }

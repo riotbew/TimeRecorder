@@ -1,9 +1,9 @@
-package com.jim.recorder.abslistview;
+package com.jim.recorder.common.adapter.listview;
 
 
 import android.content.Context;
 
-import com.jim.recorder.abslistview.base.ItemViewDelegate;
+import com.jim.recorder.common.adapter.listview.base.ItemViewDelegate;
 
 import java.util.List;
 

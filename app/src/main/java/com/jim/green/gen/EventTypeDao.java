@@ -24,7 +24,7 @@ public class EventTypeDao extends AbstractDao<EventType, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property _id = new Property(0, long.class, "_id", true, "_id");
+        public final static Property _id = new Property(0, Long.class, "_id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property Type = new Property(2, int.class, "type", false, "TYPE");
         public final static Property Show = new Property(3, boolean.class, "show", false, "SHOW");
@@ -45,7 +45,7 @@ public class EventTypeDao extends AbstractDao<EventType, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"EVENT_TYPE\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," + // 0: _id
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: _id
                 "\"NAME\" TEXT," + // 1: name
                 "\"TYPE\" INTEGER NOT NULL ," + // 2: type
                 "\"SHOW\" INTEGER NOT NULL ," + // 3: show
@@ -62,7 +62,11 @@ public class EventTypeDao extends AbstractDao<EventType, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, EventType entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.get_id());
+ 
+        Long _id = entity.get_id();
+        if (_id != null) {
+            stmt.bindLong(1, _id);
+        }
  
         String name = entity.getName();
         if (name != null) {
@@ -77,7 +81,11 @@ public class EventTypeDao extends AbstractDao<EventType, Long> {
     @Override
     protected final void bindValues(SQLiteStatement stmt, EventType entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.get_id());
+ 
+        Long _id = entity.get_id();
+        if (_id != null) {
+            stmt.bindLong(1, _id);
+        }
  
         String name = entity.getName();
         if (name != null) {
@@ -91,13 +99,13 @@ public class EventTypeDao extends AbstractDao<EventType, Long> {
 
     @Override
     public Long readKey(Cursor cursor, int offset) {
-        return cursor.getLong(offset + 0);
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public EventType readEntity(Cursor cursor, int offset) {
         EventType entity = new EventType( //
-            cursor.getLong(offset + 0), // _id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // _id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
             cursor.getInt(offset + 2), // type
             cursor.getShort(offset + 3) != 0, // show
@@ -109,7 +117,7 @@ public class EventTypeDao extends AbstractDao<EventType, Long> {
      
     @Override
     public void readEntity(Cursor cursor, EventType entity, int offset) {
-        entity.set_id(cursor.getLong(offset + 0));
+        entity.set_id(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setType(cursor.getInt(offset + 2));
         entity.setShow(cursor.getShort(offset + 3) != 0);
@@ -134,7 +142,7 @@ public class EventTypeDao extends AbstractDao<EventType, Long> {
 
     @Override
     public boolean hasKey(EventType entity) {
-        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
+        return entity.get_id() != null;
     }
 
     @Override

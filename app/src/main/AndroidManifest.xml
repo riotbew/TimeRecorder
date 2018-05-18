@@ -25,7 +25,7 @@
 
         <activity android:name=".ui.view.EventManagerActivity"/>
 
-        <activity android:name=".ui.pressenter.AddEventActivity"/>
+        <activity android:name=".ui.view.AddEventActivity"/>
     </application>
 
 </manifest>

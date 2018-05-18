@@ -5,4 +5,7 @@
         <item>散步,Jogging</item>
         <item>投资理财,Fund</item>
     </string-array>
+
+    <string name="tag_key_translation_z">translation_z</string>
+
 </resources>

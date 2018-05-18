@@ -1,4 +1,4 @@
-package com.jim.recorder.abslistview;
+package com.jim.recorder.common.adapter.recyclerview.base;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -19,42 +20,35 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-public class ViewHolder
+public class ViewHolder extends RecyclerView.ViewHolder
 {
     private SparseArray<View> mViews;
-    protected int mPosition;
     private View mConvertView;
     private Context mContext;
-    protected int mLayoutId;
 
-    public ViewHolder(Context context, View itemView, ViewGroup parent, int position)
+    public ViewHolder(Context context, View itemView)
     {
+        super(itemView);
         mContext = context;
         mConvertView = itemView;
-        mPosition = position;
         mViews = new SparseArray<View>();
-        mConvertView.setTag(this);
     }
 
 
-    public static ViewHolder get(Context context, View convertView,
-                                 ViewGroup parent, int layoutId, int position)
+    public static ViewHolder createViewHolder(Context context, View itemView)
     {
-        if (convertView == null)
-        {
-            View itemView = LayoutInflater.from(context).inflate(layoutId, parent,
-                    false);
-            ViewHolder holder = new ViewHolder(context, itemView, parent, position);
-            holder.mLayoutId = layoutId;
-            return holder;
-        } else
-        {
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-            holder.mPosition = position;
-            return holder;
-        }
+        ViewHolder holder = new ViewHolder(context, itemView);
+        return holder;
     }
 
+    public static ViewHolder createViewHolder(Context context,
+                                              ViewGroup parent, int layoutId)
+    {
+        View itemView = LayoutInflater.from(context).inflate(layoutId, parent,
+                false);
+        ViewHolder holder = new ViewHolder(context, itemView);
+        return holder;
+    }
 
     /**
      * 通过viewId获取控件
@@ -78,20 +72,7 @@ public class ViewHolder
         return mConvertView;
     }
 
-    public int getLayoutId()
-    {
-        return mLayoutId;
-    }
 
-    public void updatePosition(int position)
-    {
-        mPosition = position;
-    }
-
-    public int getItemPosition()
-    {
-        return mPosition;
-    }
 
 
     /****以下为辅助方法*****/

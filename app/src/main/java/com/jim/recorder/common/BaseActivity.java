@@ -33,8 +33,6 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void setToolBar(Toolbar toolBar) {
-//        setStatusBarColor(getResources().getColor(R.color.tool_bar_bg));
-//        如果contentView根布局添加了android:fitsSystemWindows="true"属性，请注释下面代码
         if (toolBar != null)
             setSupportActionBar(toolBar);
     }
@@ -52,7 +50,11 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected Snackbar getSnackbar(String text) {
-        return Snackbar.make(findViewById(android.R.id.content), text, Snackbar.LENGTH_INDEFINITE);
+        return getSnackbar(text, Snackbar.LENGTH_INDEFINITE);
+    }
+
+    protected Snackbar getSnackbar(String text, int duration) {
+        return Snackbar.make(findViewById(android.R.id.content), text, duration);
     }
 
     protected Activity getContext() {

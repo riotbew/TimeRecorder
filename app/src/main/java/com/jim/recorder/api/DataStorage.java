@@ -3,10 +3,12 @@ package com.jim.recorder.api;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.LongSparseArray;
+import android.util.SparseArray;
 
 import com.jim.recorder.MyApplication;
 import com.jim.recorder.R;
 import com.jim.recorder.model.CategoryType;
+import com.jim.recorder.model.Cell;
 import com.jim.recorder.model.DayCell;
 import com.jim.recorder.model.EventType;
 
@@ -43,12 +45,13 @@ public class DataStorage {
         return result;
     }
 
-    public synchronized static void saveEventList(List<EventType> eventTypes) {
-        MyApplication.getDaoInstant().getEventTypeDao().insertOrReplaceInTx(eventTypes);
-    }
-
     public synchronized static void addEvent(EventType eventType) {
         MyApplication.getDaoInstant().getEventTypeDao().insert(eventType);
+    }
+
+    public synchronized static void delEvent(Long id) {
+        MyApplication.getDaoInstant().getEventTypeDao().deleteByKey(id);
+
     }
 
     public synchronized static List<EventType> getEventList() {
@@ -59,23 +62,20 @@ public class DataStorage {
             result = new ArrayList<>();
         }
         if (result.size() == 0) {
-            result.add(new EventType("上班", 0));
-            result.add(new EventType("学习",3));
-            result.add(new EventType("阅读",5));
-            result.add(new EventType("购物",7));
-            result.add(new EventType("运动",4));
-            result.add(new EventType("聚会", 13));
-            result.add(new EventType("睡觉",21));
-            result.add(new EventType("洗漱",8));
-            result.add(new EventType("写作",18));
-            result.add(new EventType("休息", 10));
-            result.add(new EventType("闲聊",9));
-            result.add(new EventType("吃饭",2));
-            for (EventType item : result) {
-                DataStorage.addEvent(item);
-            }
+            DataStorage.addEvent(new EventType("上班", 0));
+            DataStorage.addEvent(new EventType("学习",3));
+            DataStorage.addEvent(new EventType("阅读",5));
+            DataStorage.addEvent(new EventType("购物",7));
+            DataStorage.addEvent(new EventType("运动",4));
+            DataStorage.addEvent(new EventType("聚会", 13));
+            DataStorage.addEvent(new EventType("睡觉",21));
+            DataStorage.addEvent(new EventType("洗漱",8));
+            DataStorage.addEvent(new EventType("写作",18));
+            DataStorage.addEvent(new EventType("休息", 10));
+            DataStorage.addEvent(new EventType("闲聊",9));
+            DataStorage.addEvent(new EventType("吃饭",2));
         }
-        return result;
+        return MyApplication.getDaoInstant().getEventTypeDao().loadAll();
     }
 
     public synchronized static List<CategoryType> getCategoryTypes(Context context) {

@@ -8,6 +8,7 @@ import com.hannesdorfmann.mosby.mvp.MvpView;
 import com.jim.recorder.model.Cell;
 import com.jim.recorder.model.Data;
 import com.jim.recorder.model.DayCell;
+import com.jim.recorder.model.EventType;
 
 public interface MainView extends MvpView {
 
@@ -16,7 +17,7 @@ public interface MainView extends MvpView {
     void resetLeftDayCellView(ViewGroup content,final Data item);
     void updateLeftDayCellView(ViewGroup content, final Data item, DayCell cells);
     void refreshLeft();
-    void labelCoverWarning(int type);
+    void labelCoverWarning(EventType type);
     void updateSelectIndicator(int count);
     void labelWipeWarning();
 }

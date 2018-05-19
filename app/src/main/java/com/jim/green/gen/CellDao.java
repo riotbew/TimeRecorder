@@ -26,7 +26,8 @@ public class CellDao extends AbstractDao<Cell, Void> {
     public static class Properties {
         public final static Property IsSelected = new Property(0, boolean.class, "isSelected", false, "IS_SELECTED");
         public final static Property Type = new Property(1, int.class, "type", false, "TYPE");
-        public final static Property Position = new Property(2, int.class, "position", false, "POSITION");
+        public final static Property EventId = new Property(2, Long.class, "eventId", false, "EVENT_ID");
+        public final static Property Position = new Property(3, int.class, "position", false, "POSITION");
     }
 
 
@@ -44,7 +45,8 @@ public class CellDao extends AbstractDao<Cell, Void> {
         db.execSQL("CREATE TABLE " + constraint + "\"CELL\" (" + //
                 "\"IS_SELECTED\" INTEGER NOT NULL ," + // 0: isSelected
                 "\"TYPE\" INTEGER NOT NULL ," + // 1: type
-                "\"POSITION\" INTEGER NOT NULL );"); // 2: position
+                "\"EVENT_ID\" INTEGER," + // 2: eventId
+                "\"POSITION\" INTEGER NOT NULL );"); // 3: position
     }
 
     /** Drops the underlying database table. */
@@ -58,7 +60,12 @@ public class CellDao extends AbstractDao<Cell, Void> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getIsSelected() ? 1L: 0L);
         stmt.bindLong(2, entity.getType());
-        stmt.bindLong(3, entity.getPosition());
+ 
+        Long eventId = entity.getEventId();
+        if (eventId != null) {
+            stmt.bindLong(3, eventId);
+        }
+        stmt.bindLong(4, entity.getPosition());
     }
 
     @Override
@@ -66,7 +73,12 @@ public class CellDao extends AbstractDao<Cell, Void> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getIsSelected() ? 1L: 0L);
         stmt.bindLong(2, entity.getType());
-        stmt.bindLong(3, entity.getPosition());
+ 
+        Long eventId = entity.getEventId();
+        if (eventId != null) {
+            stmt.bindLong(3, eventId);
+        }
+        stmt.bindLong(4, entity.getPosition());
     }
 
     @Override
@@ -79,7 +91,8 @@ public class CellDao extends AbstractDao<Cell, Void> {
         Cell entity = new Cell( //
             cursor.getShort(offset + 0) != 0, // isSelected
             cursor.getInt(offset + 1), // type
-            cursor.getInt(offset + 2) // position
+            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // eventId
+            cursor.getInt(offset + 3) // position
         );
         return entity;
     }
@@ -88,7 +101,8 @@ public class CellDao extends AbstractDao<Cell, Void> {
     public void readEntity(Cursor cursor, Cell entity, int offset) {
         entity.setIsSelected(cursor.getShort(offset + 0) != 0);
         entity.setType(cursor.getInt(offset + 1));
-        entity.setPosition(cursor.getInt(offset + 2));
+        entity.setEventId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setPosition(cursor.getInt(offset + 3));
      }
     
     @Override

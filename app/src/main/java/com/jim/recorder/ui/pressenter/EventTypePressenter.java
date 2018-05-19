@@ -2,6 +2,9 @@ package com.jim.recorder.ui.pressenter;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
+import com.jim.recorder.api.DataStorage;
+import com.jim.recorder.api.EventTypeManager;
+import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.callback.EventManagerView;
 import com.jim.recorder.ui.callback.MainView;
 
@@ -10,4 +13,9 @@ import com.jim.recorder.ui.callback.MainView;
  */
 
 public class EventTypePressenter extends MvpBasePresenter<EventManagerView> {
+
+    public void delEvent(EventType type) {
+        EventTypeManager.delEventType(type);
+        getView().updateEventList();
+    }
 }

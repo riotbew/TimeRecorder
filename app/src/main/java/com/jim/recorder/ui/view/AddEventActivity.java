@@ -85,19 +85,9 @@ public class AddEventActivity extends BaseActivity implements View.OnClickListen
                     View child = recyclerView.getChildAt(mSelected);
                     child.findViewById(R.id.select_icon).setVisibility(View.GONE);
                 }
-                animing = true;
                 mSelected = position;
-                BamAnim.setScale(0.5f);
-                final int pivot = BamAnim.startAnimDown(view,false ,0,0);
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        BamAnim.startAnimUp(view, pivot);
-                        view.findViewById(R.id.select_icon).setVisibility(View.VISIBLE);
-                        animing =false;
-                    }
-                }, 150);
-                BamAnim.setScale(0.95f);
+                startBtnAnim(view);
+
             }
 
             @Override
@@ -108,6 +98,21 @@ public class AddEventActivity extends BaseActivity implements View.OnClickListen
         recyclerView.setAdapter(mAdapter);
         GridLayoutManager layoutManager = new GridLayoutManager(this,7);
         recyclerView.setLayoutManager(layoutManager);
+    }
+
+    private void startBtnAnim(final View view) {
+        animing = true;
+        BamAnim.setScale(0.5f);
+        final int pivot = BamAnim.startAnimDown(view,false ,0,0);
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                BamAnim.startAnimUp(view, pivot);
+                view.findViewById(R.id.select_icon).setVisibility(View.VISIBLE);
+                animing =false;
+            }
+        }, 150);
+        BamAnim.setScale(0.95f);
     }
 
     private boolean animing = false;
@@ -150,7 +155,7 @@ public class AddEventActivity extends BaseActivity implements View.OnClickListen
             getSnackbar("存在相同事件类型", Snackbar.LENGTH_SHORT).show();
             return;
         }
-        setResult(0);
+        setResult(1);
         finish();
     }
 }

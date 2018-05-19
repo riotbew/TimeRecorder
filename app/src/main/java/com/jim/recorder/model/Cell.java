@@ -10,6 +10,7 @@ public class Cell {
     private boolean isSelected = false;
     @Property
     private int type = -1;
+    private Long eventId = -1L;
     private int position;
 
     public Cell(boolean isSelected, int position) {
@@ -17,15 +18,21 @@ public class Cell {
         this.position = position;
     }
 
-    @Generated(hash = 2101625700)
-    public Cell(boolean isSelected, int type, int position) {
+    @Generated(hash = 557474950)
+    public Cell(boolean isSelected, int type, Long eventId, int position) {
         this.isSelected = isSelected;
         this.type = type;
+        this.eventId = eventId;
         this.position = position;
     }
 
     public Cell(int type, int position) {
         this.type = type;
+        this.position = position;
+    }
+
+    public Cell(Long eventId, int position) {
+        this.eventId = eventId;
         this.position = position;
     }
 
@@ -63,5 +70,13 @@ public class Cell {
 
     public void setIsSelected(boolean isSelected) {
         this.isSelected = isSelected;
+    }
+
+    public Long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
 }

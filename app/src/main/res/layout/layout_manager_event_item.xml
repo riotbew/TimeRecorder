@@ -1,29 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:gravity="center_vertical">
+<com.jim.recorder.ui.custom.SwipeItemLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <View
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:id="@+id/event_icon"
-        android:background="@drawable/event_item_manager"
-        />
-
-    <TextView
-        android:layout_marginLeft="15dp"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        app:layout_itemType="main"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/event_name"
-        android:textSize="17sp"
-        android:text="hahaha"/>
-    <!--<Switch-->
-        <!--android:layout_width="10dp"-->
-        <!--android:layout_height="10dp" />-->
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:gravity="center_vertical">
 
+        <View
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:id="@+id/event_icon"
+            android:background="@drawable/event_item_manager"
+            />
 
-</LinearLayout>
+        <TextView
+            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/event_name"
+            android:textSize="17sp"
+            android:text="hahaha"/>
+    </LinearLayout>
+
+    <Button
+        app:layout_itemType="menu"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:background="#fc3d39"
+        android:text="删除"
+        android:textColor="@color/white"
+        android:id="@+id/swipe_del_btn"/>
+
+</com.jim.recorder.ui.custom.SwipeItemLayout>

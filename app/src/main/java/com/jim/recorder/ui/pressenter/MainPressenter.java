@@ -64,7 +64,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         long now_time = getCalendarDayStart(now).getTimeInMillis();
         getView().todayPosition(Long.valueOf((now_time - start.getTimeInMillis()+timezone)/Constants.one_day).intValue());
 
-        mStorage = DataStorage.getRecordData();
+        refreshRecordData();
     }
 
     public List<EventType> getLabelData() {
@@ -135,7 +135,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
      * 取消所有选择
      */
     public void cancelSelected() {
-        fixSelected(-1);
+        fixSelected(null);
     }
 
     public void wipeData(boolean showWarning) {
@@ -150,7 +150,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
      * 锚定颜色
      */
     @SuppressWarnings("all")
-    public void fixSelected(int type) {
+    public void fixSelected(EventType type) {
         ArrayList<Integer> selects;
         DayCell cells;
         Cell cell;
@@ -166,8 +166,9 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
                     cell = cells.get(selects.get(j));
                     if (cell != null) {
                         cell.setSelected(false);
-                        if (type != -1) {
-                            cell.setType(type);
+                        if (type != null) {
+                            cell.setType(type.getType());
+                            cell.setEventId(type.get_id());
                             needUpdates.put(key, cells);
                         }
                     }
@@ -228,11 +229,23 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         return false;
     }
 
-    public void judgeStatus(int type) {
+    public void judgeStatus(EventType type) {
         if (judgeStatus()) {
             getView().labelCoverWarning(type);
         } else {
             fixSelected(type);
         }
+    }
+
+    public void refreshRecordData() {
+        mStorage = DataStorage.getRecordData();
+        getView().refreshLeft();
+    }
+
+    public Cell cellAvailJudge(DayCell cells, int pos) {
+        Cell cell = cells.get(pos);
+        if (cell == null || EventTypeManager.getEventType(cell.getEventId()) == null)
+            return null;
+        return cell;
     }
 }

@@ -1,7 +1,8 @@
 package com.jim.recorder.model;
 
-import android.util.Log;
 import android.util.SparseArray;
+
+import com.jim.recorder.api.EventTypeManager;
 
 import org.greenrobot.greendao.converter.PropertyConverter;
 
@@ -18,10 +19,14 @@ public class DayConverter implements PropertyConverter<SparseArray<Cell>, String
         Cell tmp;
         for (String item : cells) {
             String[] cell_props = item.split("\\|");
-            Log.i(DayConverter.class.getSimpleName(), item);
-            int key = Integer.valueOf(cell_props[1]);
-            tmp = new Cell(Integer.valueOf(cell_props[0]), key);
-            result.put(key, tmp);
+            int pos = Integer.valueOf(cell_props[1]);
+            Long eventId = Long.valueOf(cell_props[0]);
+            tmp = new Cell(eventId, pos);
+            if (EventTypeManager.getEventType(eventId) == null) {
+                continue;
+            }
+            tmp.setType(EventTypeManager.getEventType(tmp.getEventId()).getType());
+            result.put(pos, tmp);
         }
         return result;
     }
@@ -35,7 +40,7 @@ public class DayConverter implements PropertyConverter<SparseArray<Cell>, String
             key = entityProperty.keyAt(i);
             item = entityProperty.get(key);
             if (item != null) {
-                result.append(item.getType()).append("|").append(item.getPosition()).append(",");
+                result.append(item.getEventId()).append("|").append(item.getPosition()).append(",");
             }
         }
         if ( result.length() > 0 && result.charAt(result.length()-1) == ',') {

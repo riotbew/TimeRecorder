@@ -13,19 +13,23 @@
         <activity android:name=".ui.view.MainActivity"
             android:screenOrientation="portrait">
 
+
         </activity>
-        <activity android:name=".DemoListActivity">
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProfitCalcActivity"/>
+        <activity android:name=".ProfitCalcActivity"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".ui.view.EventManagerActivity"/>
+        <activity android:name=".ui.view.EventManagerActivity"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".ui.view.AddEventActivity"/>
+        <activity android:name=".ui.view.AddEventActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

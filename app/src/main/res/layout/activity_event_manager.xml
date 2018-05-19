@@ -31,12 +31,11 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_marginLeft="15dp"
-        android:id="@+id/event_content_lv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </ListView>
+        android:layout_height="wrap_content"
+        android:id="@+id/event_content_rv"
+        />
 
 </LinearLayout>

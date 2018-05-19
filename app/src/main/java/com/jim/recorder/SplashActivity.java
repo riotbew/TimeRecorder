@@ -17,7 +17,7 @@ import com.jim.recorder.ui.view.MainActivity;
  * Created by Tauren on 2018/4/19.
  */
 
-public class DemoListActivity extends AppCompatActivity implements View.OnClickListener {
+public class SplashActivity extends AppCompatActivity implements View.OnClickListener {
 
 
 
@@ -37,7 +37,8 @@ public class DemoListActivity extends AppCompatActivity implements View.OnClickL
             item = demo_content.getChildAt(i);
             item.setOnClickListener(this);
         }
-//        startActivity(new Intent(this, AddEventActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     @Override

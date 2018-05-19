@@ -29,4 +29,27 @@ public class EventTypeManager {
         DataStorage.addEvent(event);
         return true;
     }
+
+    public synchronized static EventType getEventType(Long id) {
+        for (EventType item : mEvents) {
+            if (id.equals(item.get_id()))
+                return item;
+        }
+        return null;
+    }
+
+    public synchronized static void delEventType(EventType eventType) {
+        int pos = -1;
+        for (int i=0; i<mEvents.size(); i++) {
+            if (mEvents.get(i).get_id().equals(eventType.get_id())) {
+                pos = i;
+            }
+        }
+        if (pos != -1) {
+            mEvents.remove(pos);
+        } else  {
+            return;
+        }
+        DataStorage.delEvent(eventType.get_id());
+    }
 }

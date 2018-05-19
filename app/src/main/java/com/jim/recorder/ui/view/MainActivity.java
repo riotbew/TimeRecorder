@@ -1,7 +1,10 @@
 package com.jim.recorder.ui.view;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -45,6 +48,14 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
     Calendar now;
     long now_start;
     CommonAdapter leftAdapter;
+    CommonAdapter rightAdapter;
+
+    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getPresenter().refreshRecordData();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +67,24 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
         setContentView(R.layout.activity_main);
         preData( );
         initView();
+        registerReceiver(mReceiver, new IntentFilter("TIME_RECORDER_DEL_EVENT_TYPE"));
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mReceiver);
+        super.onDestroy();
     }
 
     @Override
     protected void setToolBar(Toolbar toolBar) {
         setStatusBarColor(getResources().getColor(R.color.tool_bar_bg));
+        findViewById(R.id.tab_refresh_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshLeft();
+            }
+        });
         super.setToolBar(toolBar);
     }
 
@@ -72,6 +96,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
 
         now_start = getCalendarDayStart(Calendar.getInstance()).getTimeInMillis();
         now = Calendar.getInstance();
+        rightAdapter.notifyDataSetChanged();
     }
 
     @NonNull
@@ -102,7 +127,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
         lv.setSelection(mPosition);
         lv.setVerticalScrollBarEnabled(false);
         //右边标签列表设置
-        lb.setAdapter(new CommonAdapter<EventType>(this,R.layout.layout_event_item, getPresenter().getLabelData()) {
+        rightAdapter = new CommonAdapter<EventType>(this,R.layout.layout_event_item, getPresenter().getLabelData()) {
             @Override
             protected void convert(ViewHolder viewHolder, EventType item, int position) {
                 TextView tv = viewHolder.getView(R.id.event_name);
@@ -112,12 +137,13 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
                 bg.setCornerRadius(DensityUtil.dip2px(MainActivity.this,13));
                 tv.setBackground(bg);
             }
-        });
+        };
+        lb.setAdapter(rightAdapter);
         //标签列表点击事件
         lb.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-            getPresenter().judgeStatus(getPresenter().getEventType(pos).getType());
+            getPresenter().judgeStatus(getPresenter().getEventType(pos));
             }
         });
         //lb底部标签管理器
@@ -240,7 +266,8 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
             for (int i=0; i< 24; i++) {
                 labelContainer = (ViewGroup) content.getChildAt(i);
                 for (int j = 1; j < 5; j++) {
-                    cell = cells.get((i) * 4 + j);
+                    //数据更新存在延迟，需要即时判断
+                    cell = getPresenter().cellAvailJudge(cells,(i) * 4 + j);
                     label = labelContainer.getChildAt(j);
                     if (label != null) {
                         if (cell != null) {
@@ -271,18 +298,18 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
 
     @Override
     public void refreshLeft() {
-        leftAdapter.notifyDataSetChanged();
-        if (selectIndicator != null) {
+        if (leftAdapter != null)
+            leftAdapter.notifyDataSetChanged();
+        if (selectIndicator != null)
             selectIndicator.dismiss();
-        }
     }
 
     @Override
-    public void labelCoverWarning(final int type) {
+    public void labelCoverWarning(final EventType eventType) {
         showCustomDialog(null, "原本标记的内容将被覆盖\n\n是否继续？", "继续", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                getPresenter().fixSelected(type);
+                getPresenter().fixSelected(eventType);
                 dialog.dismiss();
             }
         }, false);

@@ -15,7 +15,7 @@ import com.jim.recorder.ui.callback.MainView;
 public class EventTypePressenter extends MvpBasePresenter<EventManagerView> {
 
     public void delEvent(EventType type) {
-        EventTypeManager.delEventType(type);
+        EventTypeManager.getInstance().delEventType(type);
         getView().updateEventList();
     }
 }

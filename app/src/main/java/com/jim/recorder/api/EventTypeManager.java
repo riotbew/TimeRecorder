@@ -6,20 +6,32 @@ import java.util.List;
 
 public class EventTypeManager {
 
-    private static List<EventType> mEvents;
+    private List<EventType> mEvents;
+    private static EventTypeManager mInstance;
 
-    public synchronized static List<EventType> getEventList() {
+    private EventTypeManager() {
+        super();
+    }
+
+    public synchronized static EventTypeManager getInstance() {
+        if (mInstance == null) {
+            mInstance = new EventTypeManager();
+        }
+        return mInstance;
+    }
+
+    public synchronized List<EventType> getEventList() {
         if (mEvents == null || mEvents.size() == 0) {
             mEvents = DataStorage.getEventList();
         }
         return mEvents;
     }
 
-    public static void refreshEvent() {
+    public void refreshEvent() {
         mEvents = DataStorage.getEventList();
     }
 
-    public synchronized static boolean addEvent(EventType event) {
+    public synchronized boolean addEvent(EventType event) {
         for (EventType item : mEvents) {
             if (item.getName().equals(event.getName())) {
                 return false;
@@ -30,7 +42,7 @@ public class EventTypeManager {
         return true;
     }
 
-    public synchronized static EventType getEventType(Long id) {
+    public synchronized EventType getEventType(Long id) {
         for (EventType item : mEvents) {
             if (id.equals(item.get_id()))
                 return item;
@@ -38,7 +50,7 @@ public class EventTypeManager {
         return null;
     }
 
-    public synchronized static void delEventType(EventType eventType) {
+    public synchronized void delEventType(EventType eventType) {
         int pos = -1;
         for (int i=0; i<mEvents.size(); i++) {
             if (mEvents.get(i).get_id().equals(eventType.get_id())) {

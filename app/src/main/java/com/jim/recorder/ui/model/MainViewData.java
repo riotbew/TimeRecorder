@@ -1,14 +1,14 @@
-package com.jim.recorder.model;
+package com.jim.recorder.ui.model;
 
 /**
  * Created by Tauren on 2018/4/20.
  */
 
-public class Data {
+public class MainViewData {
 
     long time;
 
-    public Data(long time) {
+    public MainViewData(long time) {
         this.time = time;
     }
 

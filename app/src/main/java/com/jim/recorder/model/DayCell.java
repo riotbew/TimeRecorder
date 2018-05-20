@@ -2,6 +2,8 @@ package com.jim.recorder.model;
 
 import android.util.SparseArray;
 
+import com.jim.recorder.ui.model.Cell;
+
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;

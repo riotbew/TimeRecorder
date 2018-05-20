@@ -2,7 +2,7 @@ package com.jim.recorder.common.adapter.listview.base;
 
 import android.support.v4.util.SparseArrayCompat;
 
-import com.jim.recorder.common.adapter.listview.ViewHolder;
+import com.jim.recorder.common.adapter.listview.LVViewHolder;
 
 /**
  * Created by Tauren on 2018/4/18.
@@ -82,7 +82,7 @@ public class ItemViewDelegateManager<T> {
                 "No ItemViewDelegate added that matches position=" + position + " in data source");
     }
 
-    public void convert(ViewHolder holder, T item, int position)
+    public void convert(LVViewHolder holder, T item, int position)
     {
         int delegatesCount = delegates.size();
         for (int i = 0; i < delegatesCount; i++)

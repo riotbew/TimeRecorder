@@ -102,4 +102,5 @@ public class UserActionImpl implements UserAction {
         }
         return statusBarHeight;
     }
+
 }

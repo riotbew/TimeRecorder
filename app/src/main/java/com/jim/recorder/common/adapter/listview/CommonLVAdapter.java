@@ -7,10 +7,10 @@ import com.jim.recorder.common.adapter.listview.base.ItemViewDelegate;
 
 import java.util.List;
 
-public abstract class CommonAdapter<T> extends MultiItemTypeAdapter<T>
+public abstract class CommonLVAdapter<T> extends MultiItemTypeAdapter<T>
 {
 
-    public CommonAdapter(Context context, final int layoutId, List<T> datas)
+    public CommonLVAdapter(Context context, final int layoutId, List<T> datas)
     {
         super(context, datas);
 
@@ -29,13 +29,13 @@ public abstract class CommonAdapter<T> extends MultiItemTypeAdapter<T>
             }
 
             @Override
-            public void convert(ViewHolder holder, T t, int position)
+            public void convert(LVViewHolder holder, T t, int position)
             {
-                CommonAdapter.this.convert(holder, t, position);
+                CommonLVAdapter.this.convert(holder, t, position);
             }
         });
     }
 
-    protected abstract void convert(ViewHolder viewHolder, T item, int position);
+    protected abstract void convert(LVViewHolder LVViewHolder, T item, int position);
 
 }

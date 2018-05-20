@@ -54,31 +54,30 @@ public class MultiItemTypeAdapter<T> extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ItemViewDelegate itemViewDelegate = mItemViewDelegateManager.getItemViewDelegate(mDatas.get(position), position);
         int layoutId = itemViewDelegate.getItemViewLayoutId();
-        ViewHolder viewHolder = null ;
+        LVViewHolder LVViewHolder = null ;
         if (convertView == null)
         {
             View itemView = LayoutInflater.from(mContext).inflate(layoutId, parent,
                     false);
-            viewHolder = new ViewHolder(mContext, itemView, parent, position);
-            viewHolder.mLayoutId = layoutId;
-            onViewHolderCreated(viewHolder,viewHolder.getConvertView());
+            LVViewHolder = new LVViewHolder(mContext, itemView, parent, position);
+            LVViewHolder.mLayoutId = layoutId;
+            onViewHolderCreated(LVViewHolder, LVViewHolder.getConvertView());
         } else
         {
-            viewHolder = (ViewHolder) convertView.getTag();
-            viewHolder.mPosition = position;
+            LVViewHolder = (LVViewHolder) convertView.getTag();
+            LVViewHolder.mPosition = position;
         }
 
 
-        convert(viewHolder, getItem(position), position);
-        return viewHolder.getConvertView();
+        convert(LVViewHolder, getItem(position), position);
+        return LVViewHolder.getConvertView();
     }
 
-    protected void convert(ViewHolder viewHolder, T item, int position) {
-        mItemViewDelegateManager.convert(viewHolder, item, position);
+    protected void convert(LVViewHolder LVViewHolder, T item, int position) {
+        mItemViewDelegateManager.convert(LVViewHolder, item, position);
     }
 
-    public void onViewHolderCreated(ViewHolder holder , View itemView )
-    {}
+    public void onViewHolderCreated(LVViewHolder holder , View itemView ) {}
 
     @Override
     public int getCount() {
@@ -95,5 +94,8 @@ public class MultiItemTypeAdapter<T> extends BaseAdapter {
         return position;
     }
 
+    public void setDatas(List<T> datas) {
+        mDatas = datas;
+    }
 
 }

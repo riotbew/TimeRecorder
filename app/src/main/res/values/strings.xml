@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TimeRecorder</string>
+    <string name="app_name">时间标记</string>
     <string-array name="categories">
         <item>健身,Fitness</item>
         <item>散步,Jogging</item>
@@ -7,5 +7,7 @@
     </string-array>
 
     <string name="tag_key_translation_z">translation_z</string>
+    
+    <string name="app_about">本应用是移植iOS平台应用时间块，不作为盈利项目，暂时不投放广告</string>
 
 </resources>

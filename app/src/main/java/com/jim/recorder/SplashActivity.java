@@ -7,11 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.jim.recorder.api.DataStorage;
-import com.jim.recorder.model.EventType;
-import com.jim.recorder.ui.view.AddEventActivity;
-import com.jim.recorder.ui.view.EventManagerActivity;
 import com.jim.recorder.ui.view.MainActivity;
+import com.jim.recorder.ui.view.DayFixActivity;
 
 /**
  * Created by Tauren on 2018/4/19.
@@ -37,8 +34,8 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             item = demo_content.getChildAt(i);
             item.setOnClickListener(this);
         }
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
+//        startActivity(new Intent(this, DayFixActivity.class));
+//        finish();
     }
 
     @Override
@@ -51,7 +48,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
                 startActivity(it);
                 break;
             case R.id.demo2:
-                it = new Intent(this, EventManagerActivity.class);
+                it = new Intent(this, DayFixActivity.class);
                 startActivity(it);
                 break;
         }

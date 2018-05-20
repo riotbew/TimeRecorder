@@ -6,6 +6,7 @@ import android.support.multidex.MultiDexApplication;
 import com.jim.green.gen.DaoMaster;
 import com.jim.green.gen.DaoSession;
 import com.jim.recorder.api.EventTypeManager;
+import com.jim.recorder.utils.CalendarUtil;
 
 public class MyApplication extends MultiDexApplication {
 
@@ -16,7 +17,8 @@ public class MyApplication extends MultiDexApplication {
         super.onCreate();
         //配置数据库
         setupDatabase();
-        EventTypeManager.refreshEvent();
+        EventTypeManager.getInstance().refreshEvent();
+        CalendarUtil.setTimeZone();
     }
 
     /**

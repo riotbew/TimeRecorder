@@ -1,4 +1,4 @@
-package com.jim.recorder.model;
+package com.jim.recorder.ui.model;
 
 /**
  * Created by Tauren on 2018/5/18.

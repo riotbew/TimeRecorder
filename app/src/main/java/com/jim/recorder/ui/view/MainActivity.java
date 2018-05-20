@@ -19,16 +19,16 @@ import android.widget.TextView;
 
 import com.jim.recorder.R;
 import com.jim.recorder.common.BaseMvpActivity;
-import com.jim.recorder.common.adapter.listview.CommonAdapter;
-import com.jim.recorder.common.adapter.listview.ViewHolder;
-import com.jim.recorder.model.Cell;
-import com.jim.recorder.model.Data;
+import com.jim.recorder.common.adapter.listview.CommonLVAdapter;
+import com.jim.recorder.common.adapter.listview.LVViewHolder;
+import com.jim.recorder.ui.model.Cell;
+import com.jim.recorder.ui.model.MainViewData;
 import com.jim.recorder.model.DayCell;
 import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.callback.MainView;
 import com.jim.recorder.ui.pressenter.MainPressenter;
 import com.jim.recorder.utils.CalendarUtil;
-import com.jim.recorder.utils.ColorUtil;
+import com.jim.recorder.utils.TemplateColor;
 import com.jim.recorder.utils.DensityUtil;
 
 import java.util.Calendar;
@@ -47,8 +47,8 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
     int mPosition = 0;
     Calendar now;
     long now_start;
-    CommonAdapter leftAdapter;
-    CommonAdapter rightAdapter;
+    CommonLVAdapter leftAdapter;
+    CommonLVAdapter rightAdapter;
 
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -64,9 +64,8 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
         setTimeZone();
         now = Calendar.getInstance();
         now_start = getCalendarDayStart(Calendar.getInstance()).getTimeInMillis();
-        setContentView(R.layout.activity_main);
         preData( );
-        initView();
+        setContentView(R.layout.activity_main);
         registerReceiver(mReceiver, new IntentFilter("TIME_RECORDER_DEL_EVENT_TYPE"));
     }
 
@@ -93,9 +92,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
         super.onResume();
         setTimeZone();
         getPresenter().updateTime();
-
-        now_start = getCalendarDayStart(Calendar.getInstance()).getTimeInMillis();
-        now = Calendar.getInstance();
         rightAdapter.notifyDataSetChanged();
     }
 
@@ -107,33 +103,35 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
 
     private void setTimeZone() {
         getPresenter().setTimeZone();
+        now_start = getCalendarDayStart(Calendar.getInstance()).getTimeInMillis();
+        now = Calendar.getInstance();
     }
 
-    private void initView() {
+    protected void initView() {
         lv = findViewById(R.id.content_lv);
         lb = findViewById(R.id.content_label);
         //左边数据设置
-        leftAdapter = new CommonAdapter<Data>(this, R.layout.layout_main_lv, getPresenter().getViewData()) {
+        leftAdapter = new CommonLVAdapter<MainViewData>(this, R.layout.layout_main_lv, getPresenter().getViewData()) {
             @Override
-            protected void convert(ViewHolder viewHolder, final Data item, int position) {
-                ViewGroup container = (ViewGroup)viewHolder.getConvertView();
+            protected void convert(LVViewHolder LVViewHolder, final MainViewData item, int position) {
+                ViewGroup container = (ViewGroup) LVViewHolder.getConvertView();
                 ViewGroup content = container.findViewById(R.id.day_content);
                 getPresenter().handleDayCellRender(content,item,position);
                 // 左边title页面绘制
-                renderLeftTitle(viewHolder, item);
+                renderLeftTitle(LVViewHolder, item);
             }
         };
         lv.setAdapter(leftAdapter);
         lv.setSelection(mPosition);
         lv.setVerticalScrollBarEnabled(false);
         //右边标签列表设置
-        rightAdapter = new CommonAdapter<EventType>(this,R.layout.layout_event_item, getPresenter().getLabelData()) {
+        rightAdapter = new CommonLVAdapter<EventType>(this,R.layout.layout_event_item, getPresenter().getLabelData()) {
             @Override
-            protected void convert(ViewHolder viewHolder, EventType item, int position) {
-                TextView tv = viewHolder.getView(R.id.event_name);
+            protected void convert(LVViewHolder LVViewHolder, EventType item, int position) {
+                TextView tv = LVViewHolder.getView(R.id.event_name);
                 tv.setText(item.getName());
                 GradientDrawable bg = new GradientDrawable();
-                bg.setColor(ColorUtil.getColor(MainActivity.this, item.getType()));
+                bg.setColor(TemplateColor.getColor(item.getType()));
                 bg.setCornerRadius(DensityUtil.dip2px(MainActivity.this,13));
                 tv.setBackground(bg);
             }
@@ -147,7 +145,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
             }
         });
         //lb底部标签管理器
-        View view = LayoutInflater.from(this).inflate(R.layout.layout_label_footer, lb,false);
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_label_footer, null,false);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,24 +155,24 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
         lb.addFooterView(view);
     }
 
-    private void renderLeftTitle(ViewHolder viewHolder, Data item) {
+    private void renderLeftTitle(LVViewHolder LVViewHolder, MainViewData item) {
         final Calendar calendar = Calendar.getInstance();
         long date = item.getTime();
         if (now_start == date) {
-            viewHolder.getView(R.id.day_divider).setVisibility(View.VISIBLE);
+            LVViewHolder.getView(R.id.day_divider).setVisibility(View.VISIBLE);
         } else {
-            viewHolder.getView(R.id.day_divider).setVisibility(View.GONE);
+            LVViewHolder.getView(R.id.day_divider).setVisibility(View.GONE);
         }
         calendar.setTimeInMillis(date);
-        TextView text_mon = viewHolder.getView(R.id.main_mon);
+        TextView text_mon = LVViewHolder.getView(R.id.main_mon);
         if (calendar.get(Calendar.MONTH) > 9) {
             text_mon.setTextSize(11);
         } else {
             text_mon.setTextSize(16);
         }
         text_mon.setText(MONTH_NAME[calendar.get(Calendar.MONTH)]);
-        viewHolder.setText(R.id.main_date, calendar.get(Calendar.DATE)+"");
-        viewHolder.setText(R.id.main_day, WEEK_NAME[calendar.get(Calendar.DAY_OF_WEEK)]);
+        LVViewHolder.setText(R.id.main_date, calendar.get(Calendar.DATE)+"");
+        LVViewHolder.setText(R.id.main_day, WEEK_NAME[calendar.get(Calendar.DAY_OF_WEEK)]);
     }
 
     private void preData() {
@@ -202,7 +200,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
         } else {
             //TODO 填充颜色
              if (cell.getType() != -1)
-                v.setBackgroundColor(ColorUtil.getColor(this, cell.getType()));
+                v.setBackgroundColor(TemplateColor.getColor(cell.getType()));
             else
                 setCellOriginBg(v);
         }
@@ -218,7 +216,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
      * @param item
      */
     @Override
-    public void resetLeftDayCellView(ViewGroup content, final Data item) {
+    public void resetLeftDayCellView(ViewGroup content, final MainViewData item) {
         ViewGroup labelContainer;
         if (content.getChildCount() == 0) {
             for (int i = 0; i < 24; i++) {
@@ -258,7 +256,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
     }
 
     @Override
-    public void updateLeftDayCellView(ViewGroup content, final Data item, DayCell cells) {
+    public void updateLeftDayCellView(ViewGroup content, final MainViewData item, DayCell cells) {
         Cell cell;
         ViewGroup labelContainer;
         View label;
@@ -277,7 +275,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
                                 if (cell.getType() == -1) {
                                     setCellOriginBg(label);
                                 } else { //TODO 填充颜色
-                                    label.setBackgroundColor(ColorUtil.getColor(this, cell.getType()));
+                                    label.setBackgroundColor(TemplateColor.getColor(cell.getType()));
                                 }
                             }
                         } else {

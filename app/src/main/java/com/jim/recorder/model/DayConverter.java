@@ -3,6 +3,7 @@ package com.jim.recorder.model;
 import android.util.SparseArray;
 
 import com.jim.recorder.api.EventTypeManager;
+import com.jim.recorder.ui.model.Cell;
 
 import org.greenrobot.greendao.converter.PropertyConverter;
 
@@ -22,10 +23,10 @@ public class DayConverter implements PropertyConverter<SparseArray<Cell>, String
             int pos = Integer.valueOf(cell_props[1]);
             Long eventId = Long.valueOf(cell_props[0]);
             tmp = new Cell(eventId, pos);
-            if (EventTypeManager.getEventType(eventId) == null) {
+            if (EventTypeManager.getInstance().getEventType(eventId) == null) {
                 continue;
             }
-            tmp.setType(EventTypeManager.getEventType(tmp.getEventId()).getType());
+            tmp.setType(EventTypeManager.getInstance().getEventType(tmp.getEventId()).getType());
             result.put(pos, tmp);
         }
         return result;

@@ -15,13 +15,13 @@ import com.jim.recorder.R;
 import com.jim.recorder.api.EventTypeManager;
 import com.jim.recorder.common.BaseMvpActivity;
 import com.jim.recorder.common.adapter.recyclerview.CommonAdapter;
-import com.jim.recorder.common.adapter.recyclerview.MultiItemTypeAdapter;
+import com.jim.recorder.model.Constants;
 import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.callback.EventManagerView;
 import com.jim.recorder.ui.custom.MyDecoration;
 import com.jim.recorder.ui.custom.SwipeItemLayout;
 import com.jim.recorder.ui.pressenter.EventTypePressenter;
-import com.jim.recorder.utils.ColorUtil;
+import com.jim.recorder.utils.TemplateColor;
 
 /**
  * Created by Tauren on 2018/4/24.
@@ -38,7 +38,6 @@ public class EventManagerActivity extends BaseMvpActivity<EventManagerView, Even
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_manager);
-        init();
     }
 
     @NonNull
@@ -47,14 +46,15 @@ public class EventManagerActivity extends BaseMvpActivity<EventManagerView, Even
         return new EventTypePressenter();
     }
 
-    private void init() {
+    protected void initView() {
         mContent = findViewById(R.id.event_content_rv);
-        mAdapter = new com.jim.recorder.common.adapter.recyclerview.CommonAdapter<EventType>(this, R.layout.layout_manager_event_item, EventTypeManager.getEventList()) {
+        mAdapter = new com.jim.recorder.common.adapter.recyclerview.CommonAdapter<EventType>(this, R.layout.layout_manager_event_item,
+                EventTypeManager.getInstance().getEventList()) {
             @Override
             protected void convert(com.jim.recorder.common.adapter.recyclerview.base.ViewHolder holder, final EventType eventType, final int position) {
                 View icon = holder.getView(R.id.event_icon);
                 GradientDrawable bg = (GradientDrawable) icon.getBackground();
-                bg.setColor(ColorUtil.getColor(getContext(), eventType.getType()));
+                bg.setColor(TemplateColor.getColor(eventType.getType()));
                 holder.setText(R.id.event_name, eventType.getName());
                 holder.getView(R.id.swipe_del_btn).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -90,8 +90,9 @@ public class EventManagerActivity extends BaseMvpActivity<EventManagerView, Even
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != 0) {
+            sendBroadcast(new Intent(Constants.TIME_RECORDER_EVENT_UPDATE));
             mAdapter.notifyDataSetChanged();
-            mContent.smoothScrollToPosition(EventTypeManager.getEventList().size());
+            mContent.smoothScrollToPosition(EventTypeManager.getInstance().getEventList().size());
         }
     }
 
@@ -105,7 +106,7 @@ public class EventManagerActivity extends BaseMvpActivity<EventManagerView, Even
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 getPresenter().delEvent(eventType);
-                sendBroadcast(new Intent("TIME_RECORDER_DEL_EVENT_TYPE"));
+                sendBroadcast(new Intent(Constants.TIME_RECORDER_EVENT_UPDATE));
                 dialog.dismiss();
             }
         }, false);

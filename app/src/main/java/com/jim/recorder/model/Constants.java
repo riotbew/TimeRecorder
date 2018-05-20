@@ -13,4 +13,6 @@ public class Constants {
     public static final long one_hour = 3600000;
     public static final long one_day = 86400000;
     public static long timezone = 28800000;
+
+    public static final String TIME_RECORDER_EVENT_UPDATE = "TIME_RECORDER_EVENT_UPDATE";
 }

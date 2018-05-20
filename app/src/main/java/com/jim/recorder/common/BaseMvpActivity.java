@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,6 +28,8 @@ import com.jim.recorder.R;
 
 public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<V>> extends MvpActivity<V,P> {
 
+    protected final String TAG = this.getClass().getSimpleName();
+
     UserAction mAction;
 
     @Override
@@ -41,11 +44,16 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
 //        }
     }
 
+    protected void initView() {
+
+    }
+
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setToolBar(toolbar);
+        initView();
     }
 
     protected void setToolBar(Toolbar toolBar) {
@@ -74,6 +82,13 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
 
     protected Activity getContext() {
         return this;
+    }
+
+    protected void hideToolBarTitle() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
     }
 
 }

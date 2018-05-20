@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.jim.recorder.api.DataStorage;
 import com.jim.recorder.api.EventTypeManager;
-import com.jim.recorder.model.Cell;
+import com.jim.recorder.ui.model.Cell;
 import com.jim.recorder.model.Constants;
-import com.jim.recorder.model.Data;
+import com.jim.recorder.ui.model.MainViewData;
 import com.jim.recorder.model.DayCell;
 import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.callback.MainView;
@@ -24,7 +24,7 @@ import static com.jim.recorder.utils.CalendarUtil.getCalendarDayStart;
 
 public class MainPressenter extends MvpBasePresenter<MainView> {
 
-    private ArrayList<Data> mViewDatas = new ArrayList<>();
+    private ArrayList<MainViewData> mViewDatas = new ArrayList<>();
 
     private LongSparseArray<DayCell> mStorage = new LongSparseArray<>();
     private LongSparseArray<ArrayList<Integer>> mSelects= new LongSparseArray<>();
@@ -40,12 +40,12 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         }
     }
 
-    public ArrayList<Data> getViewData() {
+    public ArrayList<MainViewData> getViewData() {
         return mViewDatas;
     }
 
     public EventType getEventType(int pos) {
-        return EventTypeManager.getEventList().get(pos);
+        return EventTypeManager.getInstance().getEventList().get(pos);
     }
 
     @SuppressWarnings("all")
@@ -59,7 +59,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         end = getCalendarDayStart(end);
 
         for (long i=start.getTimeInMillis();i < end.getTimeInMillis(); i+=Constants.one_day) {
-            mViewDatas.add(new Data(i));
+            mViewDatas.add(new MainViewData(i));
         }
         long now_time = getCalendarDayStart(now).getTimeInMillis();
         getView().todayPosition(Long.valueOf((now_time - start.getTimeInMillis()+timezone)/Constants.one_day).intValue());
@@ -68,7 +68,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
     }
 
     public List<EventType> getLabelData() {
-        return EventTypeManager.getEventList();
+        return EventTypeManager.getInstance().getEventList();
     }
 
     public void updateTime() {
@@ -76,7 +76,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
     }
 
     @SuppressWarnings("all")
-    public void handleLeftClick(View v, Data item, Object position) {
+    public void handleLeftClick(View v, MainViewData item, Object position) {
         if (position == null) {
             return;
         }
@@ -120,7 +120,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
     }
 
     @SuppressWarnings("all")
-    public void handleDayCellRender(ViewGroup content, final Data item, int position) {
+    public void handleDayCellRender(ViewGroup content, final MainViewData item, int position) {
         if (mStorage.get(item.getTime()) == null) {
             getView().resetLeftDayCellView(content, mViewDatas.get(position));
         } else {
@@ -244,7 +244,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
 
     public Cell cellAvailJudge(DayCell cells, int pos) {
         Cell cell = cells.get(pos);
-        if (cell == null || EventTypeManager.getEventType(cell.getEventId()) == null)
+        if (cell == null || EventTypeManager.getInstance().getEventType(cell.getEventId()) == null)
             return null;
         return cell;
     }

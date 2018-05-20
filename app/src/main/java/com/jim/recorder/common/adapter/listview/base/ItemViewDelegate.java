@@ -1,6 +1,6 @@
 package com.jim.recorder.common.adapter.listview.base;
 
-import com.jim.recorder.common.adapter.listview.ViewHolder;
+import com.jim.recorder.common.adapter.listview.LVViewHolder;
 
 public interface ItemViewDelegate<T>
 {
@@ -9,6 +9,6 @@ public interface ItemViewDelegate<T>
 
     public abstract boolean isForViewType(T item, int position);
 
-    public abstract void convert(ViewHolder holder, T t, int position);
+    public abstract void convert(LVViewHolder holder, T t, int position);
 
 }

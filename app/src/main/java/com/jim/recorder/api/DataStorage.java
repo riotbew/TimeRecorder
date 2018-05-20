@@ -3,12 +3,11 @@ package com.jim.recorder.api;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.LongSparseArray;
-import android.util.SparseArray;
 
+import com.jim.green.gen.DayCellDao;
 import com.jim.recorder.MyApplication;
 import com.jim.recorder.R;
 import com.jim.recorder.model.CategoryType;
-import com.jim.recorder.model.Cell;
 import com.jim.recorder.model.DayCell;
 import com.jim.recorder.model.EventType;
 
@@ -43,6 +42,10 @@ public class DataStorage {
         }
 
         return result;
+    }
+
+    public synchronized static List<DayCell> getRecordDataList() {
+        return MyApplication.getDaoInstant().getDayCellDao().loadAll();
     }
 
     public synchronized static void addEvent(EventType eventType) {
@@ -95,5 +98,16 @@ public class DataStorage {
             }
         }
         return result;
+    }
+
+    public synchronized static DayCell getDayCell(long key) {
+        return MyApplication.getDaoInstant().getDayCellDao().load(key);
+    }
+
+    public synchronized static void saveDayCell(DayCell entity) {
+        if (entity == null)
+            return;
+        MyApplication.getDaoInstant().getDayCellDao().insertOrReplace(entity);
+        MyApplication.getDaoInstant().clear();
     }
 }

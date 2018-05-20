@@ -1,10 +1,10 @@
 package com.jim.recorder.ui.view;
 
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,10 +18,11 @@ import com.jim.recorder.common.BaseActivity;
 import com.jim.recorder.common.adapter.recyclerview.CommonAdapter;
 import com.jim.recorder.common.adapter.recyclerview.MultiItemTypeAdapter;
 import com.jim.recorder.common.adapter.recyclerview.base.ViewHolder;
-import com.jim.recorder.model.EventColor;
+import com.jim.recorder.model.Constants;
+import com.jim.recorder.ui.model.EventColor;
 import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.custom.BamAnim;
-import com.jim.recorder.utils.ColorUtil;
+import com.jim.recorder.utils.TemplateColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +43,9 @@ public class AddEventActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void preData() {
-        List<EventType> eventTypes = EventTypeManager.getEventList();
+        List<EventType> eventTypes = EventTypeManager.getInstance().getEventList();
         mData = new ArrayList<>();
-        for (Integer item : ColorUtil.getTemplateColors()) {
+        for (Integer item : TemplateColor.getColors()) {
             mData.add(new EventColor(item, 0));
         }
         EventType item;
@@ -65,7 +66,7 @@ public class AddEventActivity extends BaseActivity implements View.OnClickListen
                 if ((bg = (GradientDrawable) contentView.getBackground()) == null) {
                     bg = new GradientDrawable();
                 }
-                bg.setColor(ColorUtil.getColorByRes(getContext(), eventColor.getColor()));
+                bg.setColor(eventColor.getColor());
                 contentView.setBackground(bg);
 
                 TextView tv = holder.getView(R.id.color_content);
@@ -87,7 +88,6 @@ public class AddEventActivity extends BaseActivity implements View.OnClickListen
                 }
                 mSelected = position;
                 startBtnAnim(view);
-
             }
 
             @Override
@@ -122,10 +122,7 @@ public class AddEventActivity extends BaseActivity implements View.OnClickListen
         setStatusBarColor(getResources().getColor(R.color.tool_bar_bg));
         findViewById(R.id.btnRight).setOnClickListener(this);
         super.setToolBar(toolBar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
+        hideToolBarTitle();
     }
 
     @Override
@@ -151,7 +148,7 @@ public class AddEventActivity extends BaseActivity implements View.OnClickListen
             getSnackbar("请输入事件类型的名称", Snackbar.LENGTH_SHORT).show();
             return;
         }
-        if (!EventTypeManager.addEvent(new EventType(name, mSelected))) {
+        if (!EventTypeManager.getInstance().addEvent(new EventType(name, mSelected))) {
             getSnackbar("存在相同事件类型", Snackbar.LENGTH_SHORT).show();
             return;
         }

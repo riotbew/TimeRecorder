@@ -3,6 +3,7 @@ package com.jim.recorder.common;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -18,12 +19,38 @@ import com.jim.recorder.R;
  */
 
 public class BaseActivity extends AppCompatActivity {
-    UserAction mAction;
+    BaseFunc mAction;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAction = new UserActionImpl(this);
+        initAction();
+        mAction.onCreate();
+        mAction.handleIntent(getIntent());
+    }
+
+    @Override
+    public void finish() {
+        mAction.finish();
+        super.finish();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        mAction.handleIntent(getIntent());
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mAction.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        mAction.onResume();
+        super.onResume();
     }
 
     @Override
@@ -31,6 +58,17 @@ public class BaseActivity extends AppCompatActivity {
         super.setContentView(layoutResID);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setToolBar(toolbar);
+        initView();
+    }
+
+    private void initAction() {
+        mAction = new BaseFuncImpl(this);
+    }
+
+    /**
+     * 必须在setcontentView前准备好数据
+     */
+    protected void initView() {
     }
 
     protected void setToolBar(Toolbar toolBar) {

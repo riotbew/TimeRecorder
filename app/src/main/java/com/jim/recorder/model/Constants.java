@@ -15,4 +15,7 @@ public class Constants {
     public static long timezone = 28800000;
 
     public static final String TIME_RECORDER_EVENT_UPDATE = "TIME_RECORDER_EVENT_UPDATE";
+
+    // name of activity
+    public static final String TIME_RECORDER_MENUACTIVITY = "TIME_RECORDER_MENUACTIVITY";
 }

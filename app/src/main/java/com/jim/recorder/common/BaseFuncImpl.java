@@ -3,6 +3,7 @@ package com.jim.recorder.common;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
@@ -18,13 +19,44 @@ import com.jim.recorder.R;
  * Created by Tauren on 2018/5/17.
  */
 
-public class UserActionImpl implements UserAction {
+public class BaseFuncImpl implements BaseFunc {
 
     private Activity mContext;
 
-    UserActionImpl(Activity context) {
+    BaseFuncImpl(Activity context) {
         super();
         this.mContext = context;
+    }
+
+    @Override
+    public void onCreate() {
+        ActivityStackManager.getInstance().addActivity(mContext);
+    }
+
+    private boolean isFinished = false;
+    @Override
+    public void finish() {
+        if(!isFinished){
+            ActivityStackManager.getInstance().finishActivity(mContext);
+            isFinished = true;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        ActivityStackManager.getInstance().finishActivity(mContext);
+    }
+
+    @Override
+    public void onResume() {
+        ActivityStackManager.getInstance().setTopActivity(mContext);
+    }
+
+    @Override
+    public void handleIntent(Intent it) {
+        if (it.getBooleanExtra("clear_other", false)){
+            ActivityStackManager.getInstance().finishOtherActivites(mContext);
+        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,10 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
         preData( );
         setContentView(R.layout.activity_main);
         registerReceiver(mReceiver, new IntentFilter("TIME_RECORDER_DEL_EVENT_TYPE"));
+        Intent it = getIntent();
+        if (it == null) {
+            Log.i(TAG, "it is null");
+        }
     }
 
     @Override
@@ -77,14 +82,17 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
 
     @Override
     protected void setToolBar(Toolbar toolBar) {
+        super.setToolBar(toolBar);
         setStatusBarColor(getResources().getColor(R.color.tool_bar_bg));
-        findViewById(R.id.tab_refresh_right).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.tool_bar_left_menu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                refreshLeft();
+                Intent it = new Intent(getContext(), LeftMenuActivity.class);
+                it.putExtra("from", "MAIN_1");
+                startActivity(it);
             }
         });
-        super.setToolBar(toolBar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     @Override

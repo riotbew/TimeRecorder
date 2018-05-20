@@ -7,7 +7,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="toolbarNavigationButtonStyle">@style/ToolBarTheme</item>
+        <item name="toolbarStyle">@style/ToolBarTheme</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <!--<item name="toolbarNavigationButtonStyle">@style/mToolbarNavigationButtonStyle</item>-->
     </style>
 
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -29,11 +31,17 @@
     </style>
 
     <!-- Toolbar主题设置-->
-    <style name="ToolBarTheme" parent="@style/ThemeOverlay.AppCompat.Dark">
-        <item name="android:textColorSecondary">#ffffff</item>
-        <item name="android:colorBackground">#aa333333</item>
+    <style name="ToolBarTheme" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:background">@mipmap/tool_bar_main_bg</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item> <!--新增一个item，用于控制menu-->
+        <item name="android:maxHeight">@dimen/tool_bar_height</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
         <!-- <item name="android:actionOverflowButtonStyle">@style/OverflowButtonStyle</item>-->
+    </style>
+    <style name="mToolbarNavigationButtonStyle" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:padding">10dp</item>
     </style>
     <!--修改toolbar弹出菜单的位置-->
     <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
@@ -47,11 +55,15 @@
     <style name="ActionButton.Overflow" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
     </style>
 
-    <declare-styleable name="DragSelectRecyclerView">
-        <attr name="dsrv_autoScrollHotspotHeight" format="dimension"/>
-        <attr name="dsrv_autoScrollEnabled" format="boolean"/>
-        <attr name="dsrv_autoScrollHotspot_offsetTop" format="dimension"/>
-        <attr name="dsrv_autoScrollHotspot_offsetBottom" format="dimension"/>
-    </declare-styleable>
+    <!-- menu activity-->
+    <style name="Anim_fade" parent="AppTheme">
+        <item name="android:windowAnimationStyle">@style/fade</item>
+    </style>
+    <style name="fade" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/in_from_left</item>
+        <item name="android:activityOpenExitAnimation">@anim/out_to_right</item>
+        <item name="android:activityCloseEnterAnimation">@anim/in_from_right</item>
+        <item name="android:activityCloseExitAnimation">@anim/out_to_left</item>
+    </style>
 
 </resources>

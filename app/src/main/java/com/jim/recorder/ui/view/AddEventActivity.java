@@ -18,7 +18,6 @@ import com.jim.recorder.common.BaseActivity;
 import com.jim.recorder.common.adapter.recyclerview.CommonAdapter;
 import com.jim.recorder.common.adapter.recyclerview.MultiItemTypeAdapter;
 import com.jim.recorder.common.adapter.recyclerview.base.ViewHolder;
-import com.jim.recorder.model.Constants;
 import com.jim.recorder.ui.model.EventColor;
 import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.custom.BamAnim;
@@ -37,9 +36,8 @@ public class AddEventActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_event);
         preData();
-        initView();
+        setContentView(R.layout.activity_add_event);
     }
 
     private void preData() {
@@ -55,7 +53,7 @@ public class AddEventActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private void initView() {
+    protected void initView() {
         final RecyclerView recyclerView = findViewById(R.id.color_content_rv);
         event_name_input = findViewById(R.id.event_name_input);
         mAdapter = new CommonAdapter<EventColor>(this, R.layout.layout_add_event_color_item, mData) {

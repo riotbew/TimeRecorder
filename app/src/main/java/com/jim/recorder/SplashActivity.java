@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.jim.recorder.common.BaseActivity;
 import com.jim.recorder.ui.view.MainActivity;
 import com.jim.recorder.ui.view.DayFixActivity;
 
@@ -14,7 +15,7 @@ import com.jim.recorder.ui.view.DayFixActivity;
  * Created by Tauren on 2018/4/19.
  */
 
-public class SplashActivity extends AppCompatActivity implements View.OnClickListener {
+public class SplashActivity extends BaseActivity implements View.OnClickListener {
 
 
 
@@ -22,10 +23,9 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demolist);
-        initView();
     }
 
-    private void initView() {
+    protected void initView() {
 
         LinearLayout demo_content = findViewById(R.id.demo_content);
         int childCount = demo_content.getChildCount();

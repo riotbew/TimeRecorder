@@ -3,23 +3,13 @@ package com.jim.recorder.common;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
@@ -30,19 +20,47 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
 
     protected final String TAG = this.getClass().getSimpleName();
 
-    UserAction mAction;
+    BaseFunc mAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAction = new UserActionImpl(this);
+        mAction = new BaseFuncImpl(this);
+        mAction.onCreate();
+        // See @LeftMenuActivity
 //        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP){
 //            //实现透明状态栏
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //            //实现透明导航栏
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 //        }
+        mAction.handleIntent(getIntent());
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        mAction.handleIntent(intent);
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    public void finish() {
+        mAction.finish();
+        super.finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mAction.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        mAction.onResume();
+        super.onResume();
+    }
+
 
     protected void initView() {
 

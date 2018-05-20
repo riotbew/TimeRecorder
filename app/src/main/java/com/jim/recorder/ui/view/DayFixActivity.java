@@ -44,7 +44,7 @@ import java.util.List;
  * Created by Tauren on 2018/5/19.
  */
 
-public class DayFixActivity extends BaseMvpActivity<DayFixView, DayFixPressenter> implements DayFixView {
+public class DayFixActivity extends BaseMvpActivity<DayFixView, DayFixPressenter> implements DayFixView, View.OnClickListener {
 
     ListView mEventsView;
     RecyclerView mContent;
@@ -237,5 +237,16 @@ public class DayFixActivity extends BaseMvpActivity<DayFixView, DayFixPressenter
         super.setToolBar(toolBar);
         hideToolBarTitle();
         setStatusBarColor(getResources().getColor(R.color.tool_bar_bg));
+        findViewById(R.id.tool_bar_left_menu).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.tool_bar_left_menu) {
+            Intent it = new Intent(this, LeftMenuActivity.class);
+            it.putExtra("from", "MAIN_2");
+            startActivity(it);
+        }
     }
 }

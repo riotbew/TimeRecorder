@@ -11,11 +11,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.view.MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
 
 
         </activity>
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +26,8 @@
         </activity>
 
         <activity android:name=".ui.view.DayFixActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
         <activity android:name=".ProfitCalcActivity"
             android:screenOrientation="portrait"/>
 
@@ -33,6 +36,13 @@
 
         <activity android:name=".ui.view.AddEventActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".ui.view.LeftMenuActivity"
+            android:theme="@style/Anim_fade"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="TIME_RECORDER_MENUACTIVITY"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

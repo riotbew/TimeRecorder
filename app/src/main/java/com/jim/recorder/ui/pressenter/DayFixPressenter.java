@@ -118,6 +118,8 @@ public class DayFixPressenter extends MvpBasePresenter<DayFixView> {
     }
 
     public void fixSelected(HashSet<Integer> selected, EventType eventType) {
+        if (selected.size() == 0)
+            return;
         SingleModel change;
         for(Integer index : selected) {
             change = mViewData.get(index);

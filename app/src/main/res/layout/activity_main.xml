@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/R.id.content_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -8,17 +9,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@mipmap/tool_bar_main_bg">
-
-        <ImageView
-            android:id="@+id/tool_bar_left_menu"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/nav_bar_menu"
-            android:layout_marginLeft="10dp"
-            android:layout_gravity="left"
-            />
+        android:layout_height="50dp">
 
         <TextView
             android:id="@+id/tool_bar_title"

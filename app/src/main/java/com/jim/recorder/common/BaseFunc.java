@@ -22,5 +22,6 @@ public interface BaseFunc {
     void finish();
     void onDestroy();
     void onResume();
-    void handleIntent(Intent intent);
+    void storeIntent(Intent intent);
+    void handleIntent();
 }

@@ -1,6 +1,5 @@
 package com.jim.recorder.ui.view;
 
-import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;

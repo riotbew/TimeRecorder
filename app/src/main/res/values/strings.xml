@@ -8,6 +8,10 @@
 
     <string name="tag_key_translation_z">translation_z</string>
     
-    <string name="app_about">本应用是移植iOS平台应用时间块，不作为盈利项目，暂时不投放广告</string>
+    <!--<string name="app_about">本应用是移植iOS平台应用时间块，不作为盈利项目，暂时不投放广告</string>-->
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
 
 </resources>

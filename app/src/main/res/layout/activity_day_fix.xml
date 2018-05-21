@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -11,15 +11,6 @@
         android:layout_height="@dimen/tool_bar_height"
         >
 
-        <ImageView
-            android:id="@+id/tool_bar_left_menu"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/nav_bar_menu"
-            android:layout_marginLeft="10dp"
-            android:layout_gravity="left"
-            />
-
         <TextView
             android:id="@+id/tool_bar_title"
             android:layout_width="wrap_content"
@@ -29,35 +20,11 @@
             android:text="添加事件类型"
             android:textSize="20sp"
             android:gravity="center"
-            android:drawableRight="@drawable/single_fix_title_down_arrow"
             />
     </android.support.v7.widget.Toolbar>
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/content_rv"
-            android:layout_width="237dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <ListView
-            android:id="@+id/content_label"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:divider="@color/transparents"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="10dp"
-            app:layout_constraintLeft_toRightOf="@+id/content_rv"
-            app:layout_constraintRight_toRightOf="parent"/>
-    </android.support.constraint.ConstraintLayout>
+    <include
+        layout="@layout/layout_calendar_container"
+        />
 
 </LinearLayout>

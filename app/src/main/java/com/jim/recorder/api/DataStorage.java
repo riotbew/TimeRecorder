@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.LongSparseArray;
 
-import com.jim.green.gen.DayCellDao;
 import com.jim.recorder.MyApplication;
 import com.jim.recorder.R;
 import com.jim.recorder.model.CategoryType;

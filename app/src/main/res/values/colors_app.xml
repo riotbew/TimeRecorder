@@ -20,4 +20,6 @@
     <color name="cell_hour_divider">#545260</color>
 
     <color name="tool_bar_bg">#3c96e6</color>
+    <color name="tool_bar_main_bg">#58afeb</color>
+    <color name="tool_bar_main_bg_other">#cd3636</color>
 </resources>

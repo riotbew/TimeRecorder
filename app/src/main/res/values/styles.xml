@@ -4,9 +4,6 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
         <item name="toolbarStyle">@style/ToolBarTheme</item>
         <item name="android:windowIsTranslucent">true</item>
         <!--<item name="toolbarNavigationButtonStyle">@style/mToolbarNavigationButtonStyle</item>-->
@@ -32,7 +29,7 @@
 
     <!-- Toolbar主题设置-->
     <style name="ToolBarTheme" parent="@style/Widget.AppCompat.Toolbar">
-        <item name="android:background">@mipmap/tool_bar_main_bg</item>
+        <item name="android:background">@color/tool_bar_main_bg</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item> <!--新增一个item，用于控制menu-->
         <item name="android:maxHeight">@dimen/tool_bar_height</item>
         <item name="android:gravity">center</item>

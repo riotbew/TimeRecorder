@@ -15,7 +15,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.jim.recorder.R;
-import com.jim.recorder.api.EventTypeManager;
 import com.jim.recorder.common.BaseActivity;
 import com.jim.recorder.common.adapter.recyclerview.CommonAdapter;
 import com.jim.recorder.common.adapter.recyclerview.MultiItemTypeAdapter;
@@ -55,6 +54,12 @@ public class LeftMenuActivity extends BaseActivity {
         Intent it = getIntent();
         if (it != null)
             from = it.getStringExtra("from");
+        findViewById(R.id.container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override

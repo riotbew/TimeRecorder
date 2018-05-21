@@ -8,10 +8,15 @@ import android.content.IntentFilter;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -37,7 +42,7 @@ import java.util.Calendar;
 import static com.jim.recorder.model.Constants.MONTH_NAME;
 import static com.jim.recorder.model.Constants.WEEK_NAME;
 
-public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> implements MainView {
+public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> implements MainView, NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = MainActivity.class.getSimpleName();
 
@@ -66,7 +71,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
         now = Calendar.getInstance();
         now_start = getCalendarDayStart(Calendar.getInstance()).getTimeInMillis();
         preData( );
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_drawer);
         registerReceiver(mReceiver, new IntentFilter("TIME_RECORDER_DEL_EVENT_TYPE"));
         Intent it = getIntent();
         if (it == null) {
@@ -84,15 +89,25 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
     protected void setToolBar(Toolbar toolBar) {
         super.setToolBar(toolBar);
         setStatusBarColor(getResources().getColor(R.color.tool_bar_bg));
-        findViewById(R.id.tool_bar_left_menu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(getContext(), LeftMenuActivity.class);
-                it.putExtra("from", "MAIN_1");
-                startActivity(it);
-            }
-        });
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        initDrawer(toolBar);
+
+        //设置content高度
+        View view = findViewById(R.id.content_container);
+        DrawerLayout.LayoutParams lp = (DrawerLayout.LayoutParams) view.getLayoutParams();
+        lp.setMargins(0, getStatusBarHeight(), 0,0);
+        view.setLayoutParams(lp);
+    }
+
+    private void initDrawer(Toolbar toolbar) {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -353,5 +368,12 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
         if (!selectIndicator.isShown()) {
             selectIndicator.show();
         }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

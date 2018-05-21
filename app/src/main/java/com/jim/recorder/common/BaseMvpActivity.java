@@ -34,12 +34,12 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
 //            //实现透明导航栏
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 //        }
-        mAction.handleIntent(getIntent());
+        mAction.storeIntent(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        mAction.handleIntent(intent);
+        mAction.storeIntent(intent);
         super.onNewIntent(intent);
     }
 
@@ -84,6 +84,10 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
     @TargetApi(21)
     protected void setStatusBarColor(int statusColor) {
         mAction.setStatusBarColor(statusColor);
+    }
+
+    protected int getStatusBarHeight() {
+        return mAction.getStatusBarHeight();
     }
 
     protected Dialog showCustomDialog(String title, String message, String positiveBtnText, DialogInterface.OnClickListener positiveCallback, boolean cancelable) {

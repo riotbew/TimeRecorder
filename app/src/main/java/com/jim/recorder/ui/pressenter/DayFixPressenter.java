@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.util.SparseArray;
 import android.view.View;
 
+import com.codbking.calendar.CalendarBean;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.jim.recorder.api.DataStorage;
 import com.jim.recorder.api.DayCellManager;
@@ -43,9 +44,19 @@ public class DayFixPressenter extends MvpBasePresenter<DayFixView> {
     public void updateTitle() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(mSelectDay);
-        String title = String.valueOf(calendar.get(Calendar.YEAR)) + "年" +
-                (calendar.get(Calendar.MONTH) + 1) + "月 ";
+        String title = String.valueOf(calendar.get(Calendar.YEAR)) + "/" +
+                (calendar.get(Calendar.MONTH) + 1) + "/"+(calendar.get(Calendar.DATE));
         getView().updateTitle(title);
+    }
+
+    public void selectTime(CalendarBean bean) {
+        Calendar calendar = Calendar.getInstance();
+        calendar = CalendarUtil.getCalendarDayStart(calendar);
+        calendar.set(bean.year, bean.moth-1, bean.day);
+        mNowCalendar = calendar;
+        mSelectDay = calendar.getTimeInMillis();
+        updateTitle();
+        refreshContent();
     }
 
     public void refreshData() {

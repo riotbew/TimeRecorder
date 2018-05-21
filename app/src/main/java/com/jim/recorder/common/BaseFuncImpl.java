@@ -22,6 +22,7 @@ import com.jim.recorder.R;
 public class BaseFuncImpl implements BaseFunc {
 
     private Activity mContext;
+    private Intent mIntent;
 
     BaseFuncImpl(Activity context) {
         super();
@@ -49,15 +50,25 @@ public class BaseFuncImpl implements BaseFunc {
 
     @Override
     public void onResume() {
+        handleIntent();
         ActivityStackManager.getInstance().setTopActivity(mContext);
     }
 
     @Override
-    public void handleIntent(Intent it) {
-        if (it.getBooleanExtra("clear_other", false)){
+    public void storeIntent(Intent it) {
+        mIntent = it;
+    }
+
+    @Override
+    public void handleIntent() {
+        if (mIntent == null)
+            return;
+        if (mIntent.getBooleanExtra("clear_other", false)){
+            mIntent = null;
             ActivityStackManager.getInstance().finishOtherActivites(mContext);
         }
     }
+
 
     @Override
     public void setStatusBarColor(int color) {

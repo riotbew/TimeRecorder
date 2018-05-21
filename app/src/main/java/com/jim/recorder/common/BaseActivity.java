@@ -26,7 +26,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initAction();
         mAction.onCreate();
-        mAction.handleIntent(getIntent());
+        mAction.storeIntent(getIntent());
     }
 
     @Override
@@ -37,7 +37,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        mAction.handleIntent(getIntent());
+        mAction.storeIntent(getIntent());
         super.onNewIntent(intent);
     }
 
@@ -86,6 +86,10 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void setStatusBarColor(int statusColor) {
         mAction.setStatusBarColor(statusColor);
+    }
+
+    protected int getStatusBarHeight() {
+        return mAction.getStatusBarHeight();
     }
 
     protected Snackbar getSnackbar(String text) {

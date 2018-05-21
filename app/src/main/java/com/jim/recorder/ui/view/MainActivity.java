@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -372,8 +373,33 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.nav_statistic) {
+
+        } else if(id == R.id.nav_manager) {
+
+        } else if (id == R.id.nav_exchange) {
+            Intent it = new Intent(this, DayFixActivity.class);
+            it.putExtra("clear_other", true);
+            startActivity(it);
+            return true;
+        }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer == null)
+            return super.onKeyDown(keyCode, event);
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

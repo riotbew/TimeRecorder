@@ -2,6 +2,7 @@ package com.jim.recorder;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -17,17 +18,27 @@ import com.jim.recorder.ui.view.DayFixActivity;
 
 public class SplashActivity extends BaseActivity implements View.OnClickListener {
 
-
+    final Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_demolist);
+        setContentView(R.layout.activity_splash);
     }
 
     protected void initView() {
 
         LinearLayout demo_content = findViewById(R.id.demo_content);
+        if (demo_content == null) {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(getContext(), DayFixActivity.class));
+                    finish();
+                }
+            }, 1000);
+            return;
+        }
         int childCount = demo_content.getChildCount();
         View item;
         for (int i=0; i< childCount; i++) {

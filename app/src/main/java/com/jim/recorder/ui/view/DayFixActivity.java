@@ -262,7 +262,7 @@ public class DayFixActivity extends BaseMvpActivity<DayFixView, DayFixPressenter
                 textView.setText(singleModel.getName());
             }
         }
-        getPresenter().updateSelectedIndicator(leftAdapter.getSelection().size());
+        getPresenter().updateSelectedIndicator(leftAdapter.getSelection());
     }
 
     public void updateEventList(final List<EventType> eventTypeList) {

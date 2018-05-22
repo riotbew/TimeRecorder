@@ -50,7 +50,12 @@ public class DayFixPressenter extends MvpBasePresenter<DayFixView> {
         getView().updateTitle(title);
     }
 
-    public void updateSelectedIndicator(int size) {
+    public void updateSelectedIndicator(Set<Integer> selected) {
+        int size = 0;
+        for (Integer index : selected) {
+            if (index%5 !=0 )
+                size++;
+        }
         getView().updateSelectedIndicator(size);
     }
 

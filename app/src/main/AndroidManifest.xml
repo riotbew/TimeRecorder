@@ -36,13 +36,6 @@
 
         <activity android:name=".ui.view.AddEventActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".ui.view.LeftMenuActivity"
-            android:theme="@style/Anim_fade"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="TIME_RECORDER_MENUACTIVITY"/>
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

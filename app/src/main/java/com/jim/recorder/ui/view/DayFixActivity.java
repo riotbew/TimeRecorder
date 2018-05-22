@@ -11,6 +11,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -58,7 +58,7 @@ import java.util.List;
  * Created by Tauren on 2018/5/19.
  */
 
-public class DayFixActivity extends BaseMvpActivity<DayFixView, DayFixPressenter> implements DayFixView, View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class DayFixActivity extends BaseMvpActivity<DayFixView, DayFixPressenter> implements DayFixView, NavigationView.OnNavigationItemSelectedListener {
 
     ListView mEventsView;
     RecyclerView mContent;
@@ -262,6 +262,7 @@ public class DayFixActivity extends BaseMvpActivity<DayFixView, DayFixPressenter
                 textView.setText(singleModel.getName());
             }
         }
+        getPresenter().updateSelectedIndicator(leftAdapter.getSelection().size());
     }
 
     public void updateEventList(final List<EventType> eventTypeList) {
@@ -328,27 +329,21 @@ public class DayFixActivity extends BaseMvpActivity<DayFixView, DayFixPressenter
     }
 
     @Override
-    public void onClick(View v) {
-        int id = v.getId();
-    }
-
-    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         int id = item.getItemId();
         if (id == R.id.nav_statistic) {
-
+            getSnackbar("尽情期待", Snackbar.LENGTH_SHORT).show();
         } else if(id == R.id.nav_manager) {
-
+            startActivity(new Intent(this, EventManagerActivity.class));
         } else if (id == R.id.nav_exchange) {
             Intent it = new Intent(this, MainActivity.class);
             it.putExtra("clear_other", true);
             startActivity(it);
             return true;
         }
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
     @Override
@@ -363,5 +358,27 @@ public class DayFixActivity extends BaseMvpActivity<DayFixView, DayFixPressenter
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private Snackbar selectIndicator;
+    @Override
+    public void updateSelectedIndicator(int count) {
+        if (selectIndicator == null) {
+            selectIndicator = getSnackbar("");
+            selectIndicator.setAction("抹除", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getPresenter().wipeData(leftAdapter.getSelection());
+                }
+            });
+        }
+        selectIndicator.setText(getPresenter().toFormatTime(count));
+        if (count == 0) {
+            selectIndicator.dismiss();
+            return;
+        }
+        if (!selectIndicator.isShown()) {
+            selectIndicator.show();
+        }
     }
 }

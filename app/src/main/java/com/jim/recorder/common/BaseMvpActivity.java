@@ -102,6 +102,10 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
         return Snackbar.make(findViewById(android.R.id.content), text, Snackbar.LENGTH_INDEFINITE);
     }
 
+    protected Snackbar getSnackbar(String text, int duration) {
+        return Snackbar.make(findViewById(android.R.id.content), text, duration);
+    }
+
     protected Activity getContext() {
         return this;
     }

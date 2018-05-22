@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Tauren on 2018/5/19.
@@ -47,6 +48,10 @@ public class DayFixPressenter extends MvpBasePresenter<DayFixView> {
         String title = String.valueOf(calendar.get(Calendar.YEAR)) + "/" +
                 (calendar.get(Calendar.MONTH) + 1) + "/"+(calendar.get(Calendar.DATE));
         getView().updateTitle(title);
+    }
+
+    public void updateSelectedIndicator(int size) {
+        getView().updateSelectedIndicator(size);
     }
 
     public void selectTime(CalendarBean bean) {
@@ -142,6 +147,21 @@ public class DayFixPressenter extends MvpBasePresenter<DayFixView> {
         convertToDayCell();
     }
 
+    public String toFormatTime(int pCount) {
+        int count = pCount*15;
+        int hour = count/60;
+        int min = count%60;
+        StringBuilder content = new StringBuilder();
+        content.append("选择了");
+        if (hour != 0) {
+            content.append(hour).append("小时");
+        }
+        if (min != 0) {
+            content.append(min).append("分钟");
+        }
+        return content.toString();
+    }
+
     private void convertToDayCell() {
         DayCell dataToSave = new DayCell(mSelectDay);
         SparseArray<Cell> cells = new SparseArray<>();
@@ -155,7 +175,25 @@ public class DayFixPressenter extends MvpBasePresenter<DayFixView> {
             int position = 4*(i/5) + i%5;
             cells.put(position, new Cell(item.getEventId(), position));
         }
-        dataToSave.setDatas(cells);
-        DataStorage.saveDayCell(dataToSave);
+        if (cells.size() != 0) {
+            dataToSave.setDatas(cells);
+            DataStorage.saveDayCell(dataToSave);
+        } else {
+            DataStorage.delDayCell(dataToSave.getTime());
+        }
+    }
+
+    public void wipeData(Set<Integer> selected) {
+        if (selected.size() == 0)
+            return;
+        SingleModel change;
+        for(Integer index : selected) {
+            change = mViewData.get(index);
+            change.setEventId(-1);
+            change.setColor(Color.parseColor("#ebebeb"));
+            change.setName("");
+        }
+        getView().updateAfterFix();
+        convertToDayCell();
     }
 }

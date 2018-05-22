@@ -19,4 +19,5 @@ public interface DayFixView extends MvpView {
     void updateLeftCell(View v, SingleModel singleModel,int position);
     void labelCoverWarning(EventType eventType);
     void updateAfterFix();
+    void updateSelectedIndicator(int count);
 }

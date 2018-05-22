@@ -109,4 +109,9 @@ public class DataStorage {
         MyApplication.getDaoInstant().getDayCellDao().insertOrReplace(entity);
         MyApplication.getDaoInstant().clear();
     }
+
+    public synchronized static void delDayCell(Long key) {
+        MyApplication.getDaoInstant().getDayCellDao().deleteByKey(key);
+        MyApplication.getDaoInstant().clear();
+    }
 }

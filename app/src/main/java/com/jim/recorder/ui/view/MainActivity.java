@@ -373,20 +373,20 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         int id = item.getItemId();
         if (id == R.id.nav_statistic) {
-
+            getSnackbar("尽情期待", Snackbar.LENGTH_SHORT).show();
         } else if(id == R.id.nav_manager) {
-
+            startActivity(new Intent(this, EventManagerActivity.class));
         } else if (id == R.id.nav_exchange) {
             Intent it = new Intent(this, DayFixActivity.class);
             it.putExtra("clear_other", true);
             startActivity(it);
             return true;
         }
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
     @Override

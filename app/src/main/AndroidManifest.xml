@@ -28,6 +28,9 @@
         <activity android:name=".ui.view.DayFixActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"/>
+        <activity android:name=".ui.view.DayFixNewActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
         <activity android:name=".ProfitCalcActivity"
             android:screenOrientation="portrait"/>
 

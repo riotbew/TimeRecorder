@@ -16,15 +16,24 @@ public class EventType {
     @Property
     private String name;
 
+    /**
+     * 配套默认显示颜色使用，取值范围：[0-35]; -1：未使用
+     */
     @Property
     private int type = -1;
 
+    /**
+     * 这个是多余属性，建议删除
+     */
     @Property
     private boolean show = true;
 
     @Property
     private int categoryType = -1;
 
+    /**
+     * 尚未使用的属性，用于标记当前显示的位置
+     */
     @Property
     private int position = -1;
 

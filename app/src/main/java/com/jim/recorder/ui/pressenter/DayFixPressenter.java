@@ -9,7 +9,7 @@ import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.jim.recorder.api.DataStorage;
 import com.jim.recorder.api.DayCellManager;
 import com.jim.recorder.api.EventTypeManager;
-import com.jim.recorder.ui.model.Cell;
+import com.jim.recorder.ui.model.ViewCell;
 import com.jim.recorder.model.DayCell;
 import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.model.SingleModel;
@@ -92,9 +92,9 @@ public class DayFixPressenter extends MvpBasePresenter<DayFixView> {
         }
         DayCell dayCell = DayCellManager.getInstance().getData(mSelectDay);
         if (dayCell != null) {
-            SparseArray<Cell> cells = dayCell.getDatas();
+            SparseArray<ViewCell> cells = dayCell.getDatas();
             int key;
-            Cell item;
+            ViewCell item;
             SingleModel change;
             for (int i=0; i< cells.size(); i++) {
                 key = cells.keyAt(i);
@@ -169,7 +169,7 @@ public class DayFixPressenter extends MvpBasePresenter<DayFixView> {
 
     private void convertToDayCell() {
         DayCell dataToSave = new DayCell(mSelectDay);
-        SparseArray<Cell> cells = new SparseArray<>();
+        SparseArray<ViewCell> cells = new SparseArray<>();
         SingleModel item;
         for (int i=0; i<mViewData.size(); i++) {
             if (i%5 == 0)
@@ -178,7 +178,7 @@ public class DayFixPressenter extends MvpBasePresenter<DayFixView> {
             if (item.getEventId() == -1)
                 continue;
             int position = 4*(i/5) + i%5;
-            cells.put(position, new Cell(item.getEventId(), position));
+            cells.put(position, new ViewCell(item.getEventId(), position));
         }
         if (cells.size() != 0) {
             dataToSave.setDatas(cells);

@@ -24,6 +24,7 @@ public class DaoMaster extends AbstractDaoMaster {
         CategoryTypeDao.createTable(db, ifNotExists);
         DayCellDao.createTable(db, ifNotExists);
         EventTypeDao.createTable(db, ifNotExists);
+        CellDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -31,6 +32,7 @@ public class DaoMaster extends AbstractDaoMaster {
         CategoryTypeDao.dropTable(db, ifExists);
         DayCellDao.dropTable(db, ifExists);
         EventTypeDao.dropTable(db, ifExists);
+        CellDao.dropTable(db, ifExists);
     }
 
     /**
@@ -52,6 +54,7 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(CategoryTypeDao.class);
         registerDaoClass(DayCellDao.class);
         registerDaoClass(EventTypeDao.class);
+        registerDaoClass(CellDao.class);
     }
 
     public DaoSession newSession() {

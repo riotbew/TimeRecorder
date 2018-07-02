@@ -2,7 +2,7 @@ package com.jim.recorder.ui.custom;
 
 import android.content.Context;
 
-import com.jim.recorder.common.adapter.recyclerview.MultiItemTypeAdapter;
+import com.jim.common.adapter.recyclerview.MultiItemTypeAdapter;
 
 import java.util.HashSet;
 import java.util.List;

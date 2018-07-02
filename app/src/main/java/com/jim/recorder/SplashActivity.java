@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.jim.recorder.common.BaseActivity;
+import com.jim.common.BaseActivity;
+import com.jim.recorder.ui.view.DayFixNewActivity;
 import com.jim.recorder.ui.view.MainActivity;
 import com.jim.recorder.ui.view.DayFixActivity;
 
@@ -33,7 +33,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(new Intent(getContext(), DayFixActivity.class));
+                    startActivity(new Intent(getContext(), DayFixNewActivity.class));
                     finish();
                 }
             }, 1000);
@@ -45,7 +45,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
             item = demo_content.getChildAt(i);
             item.setOnClickListener(this);
         }
-        startActivity(new Intent(this, DayFixActivity.class));
+        startActivity(new Intent(this, DayFixNewActivity.class));
         finish();
     }
 

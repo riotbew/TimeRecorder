@@ -11,10 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.jim.common.adapter.recyclerview.base.ViewHolder;
 import com.jim.recorder.R;
 import com.jim.recorder.api.EventTypeManager;
-import com.jim.recorder.common.BaseMvpActivity;
-import com.jim.recorder.common.adapter.recyclerview.CommonAdapter;
+import com.jim.common.BaseMvpActivity;
+import com.jim.common.adapter.recyclerview.CommonAdapter;
 import com.jim.recorder.model.Constants;
 import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.callback.EventManagerView;
@@ -48,10 +49,10 @@ public class EventManagerActivity extends BaseMvpActivity<EventManagerView, Even
 
     protected void initView() {
         mContent = findViewById(R.id.event_content_rv);
-        mAdapter = new com.jim.recorder.common.adapter.recyclerview.CommonAdapter<EventType>(this, R.layout.layout_manager_event_item,
+        mAdapter = new CommonAdapter<EventType>(this, R.layout.layout_manager_event_item,
                 EventTypeManager.getInstance().getEventList()) {
             @Override
-            protected void convert(com.jim.recorder.common.adapter.recyclerview.base.ViewHolder holder, final EventType eventType, final int position) {
+            protected void convert(ViewHolder holder, final EventType eventType, final int position) {
                 View icon = holder.getView(R.id.event_icon);
                 GradientDrawable bg = (GradientDrawable) icon.getBackground();
                 bg.setColor(TemplateColor.getColor(eventType.getType()));

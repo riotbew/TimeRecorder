@@ -25,10 +25,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jim.recorder.R;
-import com.jim.recorder.common.BaseMvpActivity;
-import com.jim.recorder.common.adapter.listview.CommonLVAdapter;
-import com.jim.recorder.common.adapter.listview.LVViewHolder;
-import com.jim.recorder.ui.model.Cell;
+import com.jim.common.BaseMvpActivity;
+import com.jim.common.adapter.listview.CommonLVAdapter;
+import com.jim.common.adapter.listview.LVViewHolder;
+import com.jim.recorder.ui.model.ViewCell;
 import com.jim.recorder.ui.model.MainViewData;
 import com.jim.recorder.model.DayCell;
 import com.jim.recorder.model.EventType;
@@ -215,16 +215,16 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
     /**
      * 处理左边列表点击事件
      * @param v
-     * @param cell
+     * @param viewCell
      */
     @Override
-    public void updateCellAfterClick(View v, Cell cell) {
-        if (cell.isSelected()) {
+    public void updateCellAfterClick(View v, ViewCell viewCell) {
+        if (viewCell.isSelected()) {
             v.setBackground(getResources().getDrawable(R.mipmap.cell_selected));
         } else {
             //TODO 填充颜色
-             if (cell.getType() != -1)
-                v.setBackgroundColor(TemplateColor.getColor(cell.getType()));
+             if (viewCell.getType() != -1)
+                v.setBackgroundColor(TemplateColor.getColor(viewCell.getType()));
             else
                 setCellOriginBg(v);
         }
@@ -281,7 +281,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
 
     @Override
     public void updateLeftDayCellView(ViewGroup content, final MainViewData item, DayCell cells) {
-        Cell cell;
+        ViewCell viewCell;
         ViewGroup labelContainer;
         View label;
         if (content != null) {
@@ -289,17 +289,17 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
                 labelContainer = (ViewGroup) content.getChildAt(i);
                 for (int j = 1; j < 5; j++) {
                     //数据更新存在延迟，需要即时判断
-                    cell = getPresenter().cellAvailJudge(cells,(i) * 4 + j);
+                    viewCell = getPresenter().cellAvailJudge(cells,(i) * 4 + j);
                     label = labelContainer.getChildAt(j);
                     if (label != null) {
-                        if (cell != null) {
-                            if (cell.isSelected()){
+                        if (viewCell != null) {
+                            if (viewCell.isSelected()){
                                 label.setBackground(getResources().getDrawable(R.mipmap.cell_selected));
                             } else {
-                                if (cell.getType() == -1) {
+                                if (viewCell.getType() == -1) {
                                     setCellOriginBg(label);
                                 } else { //TODO 填充颜色
-                                    label.setBackgroundColor(TemplateColor.getColor(cell.getType()));
+                                    label.setBackgroundColor(TemplateColor.getColor(viewCell.getType()));
                                 }
                             }
                         } else {

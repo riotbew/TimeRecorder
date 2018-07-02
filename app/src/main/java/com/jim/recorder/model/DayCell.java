@@ -2,7 +2,7 @@ package com.jim.recorder.model;
 
 import android.util.SparseArray;
 
-import com.jim.recorder.ui.model.Cell;
+import com.jim.recorder.ui.model.ViewCell;
 
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
@@ -17,14 +17,14 @@ public class DayCell {
     private long time;
 
     @Convert(converter = DayConverter.class, columnType = String.class)
-    private SparseArray<Cell> datas = new SparseArray<>();
+    private SparseArray<ViewCell> datas = new SparseArray<>();
 
     public DayCell(long time) {
         this.time = time;
     }
 
-    @Generated(hash = 208389714)
-    public DayCell(long time, SparseArray<Cell> datas) {
+    @Generated(hash = 2073067504)
+    public DayCell(long time, SparseArray<ViewCell> datas) {
         this.time = time;
         this.datas = datas;
     }
@@ -45,19 +45,19 @@ public class DayCell {
         return datas.size();
     }
 
-    public void put(int pos, Cell cell) {
-        datas.put(pos, cell);
+    public void put(int pos, ViewCell viewCell) {
+        datas.put(pos, viewCell);
     }
 
-    public Cell get(int pos) {
+    public ViewCell get(int pos) {
         return datas.get(pos);
     }
 
-    public SparseArray<Cell> getDatas() {
+    public SparseArray<ViewCell> getDatas() {
         return this.datas;
     }
 
-    public void setDatas(SparseArray<Cell> datas) {
+    public void setDatas(SparseArray<ViewCell> datas) {
         this.datas = datas;
     }
 }

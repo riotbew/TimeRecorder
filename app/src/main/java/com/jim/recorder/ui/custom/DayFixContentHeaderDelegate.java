@@ -1,8 +1,8 @@
 package com.jim.recorder.ui.custom;
 
 import com.jim.recorder.R;
-import com.jim.recorder.common.adapter.recyclerview.base.ItemViewDelegate;
-import com.jim.recorder.common.adapter.recyclerview.base.ViewHolder;
+import com.jim.common.adapter.recyclerview.base.ItemViewDelegate;
+import com.jim.common.adapter.recyclerview.base.ViewHolder;
 
 /**
  * Created by Tauren on 2018/5/19.

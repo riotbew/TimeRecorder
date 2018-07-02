@@ -3,26 +3,26 @@ package com.jim.recorder.model;
 import android.util.SparseArray;
 
 import com.jim.recorder.api.EventTypeManager;
-import com.jim.recorder.ui.model.Cell;
+import com.jim.recorder.ui.model.ViewCell;
 
 import org.greenrobot.greendao.converter.PropertyConverter;
 
-public class DayConverter implements PropertyConverter<SparseArray<Cell>, String> {
+public class DayConverter implements PropertyConverter<SparseArray<ViewCell>, String> {
 
 
     @Override
-    public SparseArray<Cell> convertToEntityProperty(String databaseValue) {
+    public SparseArray<ViewCell> convertToEntityProperty(String databaseValue) {
         if (databaseValue == null || databaseValue.length() == 0) {
             return null;
         }
-        SparseArray<Cell> result = new SparseArray<>();
+        SparseArray<ViewCell> result = new SparseArray<>();
         String[] cells = databaseValue.split(",");
-        Cell tmp;
+        ViewCell tmp;
         for (String item : cells) {
             String[] cell_props = item.split("\\|");
             int pos = Integer.valueOf(cell_props[1]);
             Long eventId = Long.valueOf(cell_props[0]);
-            tmp = new Cell(eventId, pos);
+            tmp = new ViewCell(eventId, pos);
             if (EventTypeManager.getInstance().getEventType(eventId) == null) {
                 continue;
             }
@@ -33,9 +33,9 @@ public class DayConverter implements PropertyConverter<SparseArray<Cell>, String
     }
 
     @Override
-    public String convertToDatabaseValue(SparseArray<Cell> entityProperty) {
+    public String convertToDatabaseValue(SparseArray<ViewCell> entityProperty) {
         int key;
-        Cell item;
+        ViewCell item;
         StringBuilder result = new StringBuilder();
         for (int i=0; i<entityProperty.size(); i++) {
             key = entityProperty.keyAt(i);

@@ -2,19 +2,32 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'jimqiu'
+            storeFile file('/Users/Tauren/jimqiu.jks')
+        }
+    }
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.jim.timerecorder"
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//
+//        ndk {
+//            moduleName "first_jni"
+//            stl "stlport_static"
+//            ldLibs "log"
+//        }
     }
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
         debug {
             minifyEnabled false
@@ -25,14 +38,10 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.android.support:percent:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.hannesdorfmann.mosby:mvp:2.0.1'
+    implementation project(':common')
     implementation 'org.greenrobot:greendao:3.2.2'
+//    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+
     implementation project(':calendar')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

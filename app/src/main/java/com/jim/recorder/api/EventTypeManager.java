@@ -7,17 +7,13 @@ import java.util.List;
 public class EventTypeManager {
 
     private List<EventType> mEvents;
-    private static EventTypeManager mInstance;
 
     private EventTypeManager() {
         super();
     }
 
-    public synchronized static EventTypeManager getInstance() {
-        if (mInstance == null) {
-            mInstance = new EventTypeManager();
-        }
-        return mInstance;
+    public static EventTypeManager getInstance() {
+        return EventTypeManagerHolder.sInstance;
     }
 
     public synchronized List<EventType> getEventList() {
@@ -63,5 +59,9 @@ public class EventTypeManager {
             return;
         }
         DataStorage.delEvent(eventType.get_id());
+    }
+
+    private static class EventTypeManagerHolder {
+        private static final EventTypeManager sInstance = new EventTypeManager();
     }
 }

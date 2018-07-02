@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.jim.recorder.api.DataStorage;
 import com.jim.recorder.api.EventTypeManager;
-import com.jim.recorder.ui.model.Cell;
+import com.jim.recorder.ui.model.ViewCell;
 import com.jim.recorder.model.Constants;
 import com.jim.recorder.ui.model.MainViewData;
 import com.jim.recorder.model.DayCell;
@@ -83,24 +83,24 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         int pos = (Integer) position;
         long timeStamp = item.getTime();
         DayCell cells = mStorage.get(timeStamp);
-        Cell cell = null;
+        ViewCell viewCell = null;
         if (cells == null) {
             cells = new DayCell(timeStamp);
-            cell = new Cell(true, pos);
-            cells.put(pos, cell);
+            viewCell = new ViewCell(true, pos);
+            cells.put(pos, viewCell);
             mStorage.put(timeStamp, cells);
         } else {
-            cell = cells.get(pos);
-            if (cell == null) {
-                cell = new Cell(true, pos);
-                cells.put(pos, cell);
+            viewCell = cells.get(pos);
+            if (viewCell == null) {
+                viewCell = new ViewCell(true, pos);
+                cells.put(pos, viewCell);
             } else {
-                cell.setSelected(!cell.isSelected());
+                viewCell.setSelected(!viewCell.isSelected());
             }
         }
         //储存已经选择
         ArrayList<Integer> selects = mSelects.get(timeStamp);
-        if (cell.isSelected()) {
+        if (viewCell.isSelected()) {
             if (selects == null) {
                 selects = new ArrayList<>(5);
             }
@@ -115,7 +115,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
                 }
             }
         }
-        getView().updateCellAfterClick(v,cell);
+        getView().updateCellAfterClick(v, viewCell);
         getView().updateSelectIndicator(mSelectCount);
     }
 
@@ -153,7 +153,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
     public void fixSelected(EventType type) {
         ArrayList<Integer> selects;
         DayCell cells;
-        Cell cell;
+        ViewCell viewCell;
         long key;
         LongSparseArray<DayCell> needUpdates = new LongSparseArray<>();
 
@@ -163,12 +163,12 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
             cells = mStorage.get(key);
             if (cells != null) {
                 for (int j = 0; j < selects.size(); j++) {
-                    cell = cells.get(selects.get(j));
-                    if (cell != null) {
-                        cell.setSelected(false);
+                    viewCell = cells.get(selects.get(j));
+                    if (viewCell != null) {
+                        viewCell.setSelected(false);
                         if (type != null) {
-                            cell.setType(type.getType());
-                            cell.setEventId(type.get_id());
+                            viewCell.setType(type.getType());
+                            viewCell.setEventId(type.get_id());
                             needUpdates.put(key, cells);
                         }
                     }
@@ -207,7 +207,7 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         }
         ArrayList<Integer> selects;
         DayCell cells;
-        Cell cell;
+        ViewCell viewCell;
         long key;
         for (int i =0; i< mSelects.size(); i++) {
             key = mSelects.keyAt(i);
@@ -215,10 +215,10 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
             cells = mStorage.get(key);
             if (cells != null) {
                 for (int j = 0; j < selects.size(); j++) {
-                    cell = cells.get(selects.get(j));
-                    if (cell != null) {
-                        cell.setSelected(false);
-                        if (cell.getType() != -1) {
+                    viewCell = cells.get(selects.get(j));
+                    if (viewCell != null) {
+                        viewCell.setSelected(false);
+                        if (viewCell.getType() != -1) {
                             return true;
                         }
                     }
@@ -242,10 +242,10 @@ public class MainPressenter extends MvpBasePresenter<MainView> {
         getView().refreshLeft();
     }
 
-    public Cell cellAvailJudge(DayCell cells, int pos) {
-        Cell cell = cells.get(pos);
-        if (cell == null || EventTypeManager.getInstance().getEventType(cell.getEventId()) == null)
+    public ViewCell cellAvailJudge(DayCell cells, int pos) {
+        ViewCell viewCell = cells.get(pos);
+        if (viewCell == null || EventTypeManager.getInstance().getEventType(viewCell.getEventId()) == null)
             return null;
-        return cell;
+        return viewCell;
     }
 }

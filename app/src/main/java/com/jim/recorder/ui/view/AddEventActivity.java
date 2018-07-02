@@ -13,10 +13,10 @@ import android.widget.TextView;
 
 import com.jim.recorder.R;
 import com.jim.recorder.api.EventTypeManager;
-import com.jim.recorder.common.BaseActivity;
-import com.jim.recorder.common.adapter.recyclerview.CommonAdapter;
-import com.jim.recorder.common.adapter.recyclerview.MultiItemTypeAdapter;
-import com.jim.recorder.common.adapter.recyclerview.base.ViewHolder;
+import com.jim.common.BaseActivity;
+import com.jim.common.adapter.recyclerview.CommonAdapter;
+import com.jim.common.adapter.recyclerview.MultiItemTypeAdapter;
+import com.jim.common.adapter.recyclerview.base.ViewHolder;
 import com.jim.recorder.ui.model.EventColor;
 import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.custom.BamAnim;

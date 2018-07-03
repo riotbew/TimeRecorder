@@ -24,10 +24,10 @@ public class CellDao extends AbstractDao<Cell, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property MTime = new Property(0, Long.class, "mTime", true, "_id");
-        public final static Property MHowLong = new Property(1, int.class, "mHowLong", false, "M_HOW_LONG");
-        public final static Property MUnit = new Property(2, Long.class, "mUnit", false, "M_UNIT");
-        public final static Property MTypeId = new Property(3, Long.class, "mTypeId", false, "M_TYPE_ID");
+        public final static Property Time = new Property(0, Long.class, "time", true, "_id");
+        public final static Property HowLong = new Property(1, int.class, "howLong", false, "HOW_LONG");
+        public final static Property Unit = new Property(2, Long.class, "unit", false, "UNIT");
+        public final static Property TypeId = new Property(3, Long.class, "typeId", false, "TYPE_ID");
     }
 
 
@@ -43,10 +43,10 @@ public class CellDao extends AbstractDao<Cell, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"CELL\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: mTime
-                "\"M_HOW_LONG\" INTEGER NOT NULL ," + // 1: mHowLong
-                "\"M_UNIT\" INTEGER," + // 2: mUnit
-                "\"M_TYPE_ID\" INTEGER);"); // 3: mTypeId
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: time
+                "\"HOW_LONG\" INTEGER NOT NULL ," + // 1: howLong
+                "\"UNIT\" INTEGER," + // 2: unit
+                "\"TYPE_ID\" INTEGER);"); // 3: typeId
     }
 
     /** Drops the underlying database table. */
@@ -59,20 +59,20 @@ public class CellDao extends AbstractDao<Cell, Long> {
     protected final void bindValues(DatabaseStatement stmt, Cell entity) {
         stmt.clearBindings();
  
-        Long mTime = entity.getMTime();
-        if (mTime != null) {
-            stmt.bindLong(1, mTime);
+        Long time = entity.getTime();
+        if (time != null) {
+            stmt.bindLong(1, time);
         }
-        stmt.bindLong(2, entity.getMHowLong());
+        stmt.bindLong(2, entity.getHowLong());
  
-        Long mUnit = entity.getMUnit();
-        if (mUnit != null) {
-            stmt.bindLong(3, mUnit);
+        Long unit = entity.getUnit();
+        if (unit != null) {
+            stmt.bindLong(3, unit);
         }
  
-        Long mTypeId = entity.getMTypeId();
-        if (mTypeId != null) {
-            stmt.bindLong(4, mTypeId);
+        Long typeId = entity.getTypeId();
+        if (typeId != null) {
+            stmt.bindLong(4, typeId);
         }
     }
 
@@ -80,20 +80,20 @@ public class CellDao extends AbstractDao<Cell, Long> {
     protected final void bindValues(SQLiteStatement stmt, Cell entity) {
         stmt.clearBindings();
  
-        Long mTime = entity.getMTime();
-        if (mTime != null) {
-            stmt.bindLong(1, mTime);
+        Long time = entity.getTime();
+        if (time != null) {
+            stmt.bindLong(1, time);
         }
-        stmt.bindLong(2, entity.getMHowLong());
+        stmt.bindLong(2, entity.getHowLong());
  
-        Long mUnit = entity.getMUnit();
-        if (mUnit != null) {
-            stmt.bindLong(3, mUnit);
+        Long unit = entity.getUnit();
+        if (unit != null) {
+            stmt.bindLong(3, unit);
         }
  
-        Long mTypeId = entity.getMTypeId();
-        if (mTypeId != null) {
-            stmt.bindLong(4, mTypeId);
+        Long typeId = entity.getTypeId();
+        if (typeId != null) {
+            stmt.bindLong(4, typeId);
         }
     }
 
@@ -105,32 +105,32 @@ public class CellDao extends AbstractDao<Cell, Long> {
     @Override
     public Cell readEntity(Cursor cursor, int offset) {
         Cell entity = new Cell( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // mTime
-            cursor.getInt(offset + 1), // mHowLong
-            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // mUnit
-            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // mTypeId
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // time
+            cursor.getInt(offset + 1), // howLong
+            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // unit
+            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // typeId
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, Cell entity, int offset) {
-        entity.setMTime(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setMHowLong(cursor.getInt(offset + 1));
-        entity.setMUnit(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
-        entity.setMTypeId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setTime(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setHowLong(cursor.getInt(offset + 1));
+        entity.setUnit(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setTypeId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
      }
     
     @Override
     protected final Long updateKeyAfterInsert(Cell entity, long rowId) {
-        entity.setMTime(rowId);
+        entity.setTime(rowId);
         return rowId;
     }
     
     @Override
     public Long getKey(Cell entity) {
         if(entity != null) {
-            return entity.getMTime();
+            return entity.getTime();
         } else {
             return null;
         }
@@ -138,7 +138,7 @@ public class CellDao extends AbstractDao<Cell, Long> {
 
     @Override
     public boolean hasKey(Cell entity) {
-        return entity.getMTime() != null;
+        return entity.getTime() != null;
     }
 
     @Override

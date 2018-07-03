@@ -1,13 +1,10 @@
 package com.jim.recorder.api;
 
-import android.app.Application;
-
 import com.jim.green.gen.CellDao;
 import com.jim.recorder.MyApplication;
 import com.jim.recorder.model.Cell;
 
 import org.greenrobot.greendao.query.QueryBuilder;
-import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +21,16 @@ public class CellManager {
         return CellManagerHolder.sInstance;
     }
 
-    public void getDay(long originTime) {
+    public List<Cell> getDay(long originTime) {
         QueryBuilder<Cell> queryBuilder = MyApplication.getDaoInstant().getCellDao().queryBuilder();
-        MyApplication.getDaoInstant().getCellDao().queryBuilder().where(CellDao.Properties.MTime.between(String.valueOf(originTime),String.valueOf(originTime)));
-//        WhereCondition
-
+        return MyApplication.getDaoInstant().getCellDao().queryBuilder()
+                .where(CellDao.Properties.Time.between(String.valueOf(originTime), String.valueOf(originTime)))
+                .orderAsc(CellDao.Properties.Time)
+                .list();
     }
 
-
+    public void save(List<Cell> data) {
+        MyApplication.getDaoInstant().getCellDao().insertOrReplaceInTx(data);
+    }
 
 }

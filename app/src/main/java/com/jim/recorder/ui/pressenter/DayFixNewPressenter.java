@@ -9,6 +9,8 @@ import com.jim.recorder.api.CellManager;
 import com.jim.recorder.api.DataStorage;
 import com.jim.recorder.api.DayCellManager;
 import com.jim.recorder.api.EventTypeManager;
+import com.jim.recorder.model.Cell;
+import com.jim.recorder.model.Constants;
 import com.jim.recorder.model.DayCell;
 import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.callback.DayFixView;
@@ -97,37 +99,35 @@ public class DayFixNewPressenter extends MvpBasePresenter<DayFixView> {
                 mViewData.add(new SingleModel(Color.parseColor("#ebebeb"),false));
             }
         }
-        DayCell dayCell = DayCellManager.getInstance().getData(mSelectDay);
-        if (dayCell != null) {
-            SparseArray<ViewCell> cells = dayCell.getDatas();
-            int key;
-            ViewCell item;
-            SingleModel change;
-            for (int i=0; i< cells.size(); i++) {
-                key = cells.keyAt(i);
-                item = cells.get(key);
-                if (item == null)
-                    continue;
-                int position = (int) item.getPosition()-1;
-                int index = (position/4)*5+position%4+1;
-                change = mViewData.get(index);
-                EventType eventType = EventTypeManager.getInstance().getEventType(item.getEventId());
-                if (eventType == null) {
-                    change.setColor(Color.parseColor("#ebebeb"));
-                    change.setEventId(-1);
-                    change.setName("");
-                } else {
-                    change.setColor(TemplateColor.getColor(eventType.getType()));
-                    change.setEventId(item.getEventId());
-                    change.setName(eventType.getName());
-                }
-
-            }
-
-        }
+//        DayCell dayCell = DayCellManager.getInstance().getData(mSelectDay);
+//        if (dayCell != null) {
+//            SparseArray<ViewCell> cells = dayCell.getDatas();
+//            int key;
+//            ViewCell item;
+//            SingleModel change;
+//            for (int i=0; i< cells.size(); i++) {
+//                key = cells.keyAt(i);
+//                item = cells.get(key);
+//                if (item == null)
+//                    continue;
+//                int position = (int) item.getPosition()-1;
+//                int index = (position/4)*5+position%4+1;
+//                change = mViewData.get(index);
+//                EventType eventType = EventTypeManager.getInstance().getEventType(item.getEventId());
+//                if (eventType == null) {
+//                    change.setColor(Color.parseColor("#ebebeb"));
+//                    change.setEventId(-1);
+//                    change.setName("");
+//                } else {
+//                    change.setColor(TemplateColor.getColor(eventType.getType()));
+//                    change.setEventId(item.getEventId());
+//                    change.setName(eventType.getName());
+//                }
+//
+//            }
+//
+//        }
         getView().updateContent(mViewData);
-        
-//        CellManager
     }
 
     public void handleLeftClick(View view, int position) {
@@ -177,24 +177,40 @@ public class DayFixNewPressenter extends MvpBasePresenter<DayFixView> {
     }
 
     private void convertToDayCell() {
-        DayCell dataToSave = new DayCell(mSelectDay);
-        SparseArray<ViewCell> cells = new SparseArray<>();
+        List<Cell> storageData = new ArrayList<>();
         SingleModel item;
+        long typeId = 0l;
+        long originTime = 0l;
+        int count = 0;
         for (int i=0; i<mViewData.size(); i++) {
             if (i%5 == 0)
                 continue;
             item = mViewData.get(i);
-            if (item.getEventId() == -1)
-                continue;
             int position = 4*(i/5) + i%5;
-            cells.put(position, new ViewCell(item.getEventId(), position));
+            if (typeId != item.getEventId()) {
+                //typeId == -1 为无效数据，无需处理
+                if (typeId != -1 && typeId != 0) {
+                    storageData.add(new Cell(originTime, count, typeId));
+                }
+                originTime = mSelectDay + (position-1) * Constants.one_min * 15;
+                typeId = item.getEventId();
+                count = 0;
+            }
+            count++;
         }
-        if (cells.size() != 0) {
-            dataToSave.setDatas(cells);
-            DataStorage.saveDayCell(dataToSave);
+        if (count != 0 && typeId != -1) {
+            storageData.add(new Cell(originTime, count, typeId));
+        }
+        if (storageData.size() != 0) {
+            CellManager.getInstance().save(storageData);
         } else {
-            DataStorage.delDayCell(dataToSave.getTime());
+            CellManager.getInstance().save(storageData);
+//            DataStorage.delDayCell(dataToSave.getTime());
         }
+    }
+
+    private Cell generate(long originTime, int howLong, long typeId) {
+        return null;
     }
 
     public void wipeData(Set<Integer> selected) {

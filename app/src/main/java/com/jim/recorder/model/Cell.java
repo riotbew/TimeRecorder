@@ -9,90 +9,64 @@ import org.greenrobot.greendao.annotation.Generated;
 public class Cell {
 
     @Id
-    private Long mTime;
+    private Long time;
 
     @Property
-    private int mHowLong;
+    private int howLong;
 
     @Property
-    private Long mUnit = Constants.one_min * 15;
+    private Long unit = Constants.one_min * 15;
 
     @Property
-    private Long mTypeId = null;
+    private Long typeId = null;
 
-    @Generated(hash = 347678275)
-    public Cell(Long mTime, int mHowLong, Long mUnit, Long mTypeId) {
-        this.mTime = mTime;
-        this.mHowLong = mHowLong;
-        this.mUnit = mUnit;
-        this.mTypeId = mTypeId;
+    public Cell(Long time, int howLong, Long typeId) {
+        this.time = time;
+        this.howLong = howLong;
+        this.typeId = typeId;
+    }
+
+    @Generated(hash = 368920696)
+    public Cell(Long time, int howLong, Long unit, Long typeId) {
+        this.time = time;
+        this.howLong = howLong;
+        this.unit = unit;
+        this.typeId = typeId;
     }
 
     @Generated(hash = 739260143)
     public Cell() {
     }
 
-    public Long getmTime() {
-        return mTime;
+    public Long getTime() {
+        return time;
     }
 
-    public void setmTime(Long mTime) {
-        this.mTime = mTime;
+    public void setTime(Long time) {
+        this.time = time;
     }
 
-    public int getmHowLong() {
-        return mHowLong;
+    public int getHowLong() {
+        return howLong;
     }
 
-    public void setmHowLong(int mHowLong) {
-        this.mHowLong = mHowLong;
+    public void setHowLong(int howLong) {
+        this.howLong = howLong;
     }
 
-    public Long getmUnit() {
-        return mUnit;
+    public Long getUnit() {
+        return unit;
     }
 
-    public void setmUnit(Long mUnit) {
-        this.mUnit = mUnit;
+    public void setUnit(Long unit) {
+        this.unit = unit;
     }
 
-    public Long getmTypeId() {
-        return mTypeId;
+    public Long getTypeId() {
+        return typeId;
     }
 
-    public void setmTypeId(Long mTypeId) {
-        this.mTypeId = mTypeId;
-    }
-
-    public Long getMTime() {
-        return this.mTime;
-    }
-
-    public void setMTime(Long mTime) {
-        this.mTime = mTime;
-    }
-
-    public int getMHowLong() {
-        return this.mHowLong;
-    }
-
-    public void setMHowLong(int mHowLong) {
-        this.mHowLong = mHowLong;
-    }
-
-    public Long getMUnit() {
-        return this.mUnit;
-    }
-
-    public void setMUnit(Long mUnit) {
-        this.mUnit = mUnit;
-    }
-
-    public Long getMTypeId() {
-        return this.mTypeId;
-    }
-
-    public void setMTypeId(Long mTypeId) {
-        this.mTypeId = mTypeId;
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
     }
 }

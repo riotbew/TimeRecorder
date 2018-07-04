@@ -12,25 +12,11 @@ public class Cell {
     private Long time;
 
     @Property
-    private int howLong;
-
-    @Property
-    private Long unit = Constants.one_min * 15;
-
-    @Property
     private Long typeId = null;
 
-    public Cell(Long time, int howLong, Long typeId) {
+    @Generated(hash = 406049515)
+    public Cell(Long time, Long typeId) {
         this.time = time;
-        this.howLong = howLong;
-        this.typeId = typeId;
-    }
-
-    @Generated(hash = 368920696)
-    public Cell(Long time, int howLong, Long unit, Long typeId) {
-        this.time = time;
-        this.howLong = howLong;
-        this.unit = unit;
         this.typeId = typeId;
     }
 
@@ -44,22 +30,6 @@ public class Cell {
 
     public void setTime(Long time) {
         this.time = time;
-    }
-
-    public int getHowLong() {
-        return howLong;
-    }
-
-    public void setHowLong(int howLong) {
-        this.howLong = howLong;
-    }
-
-    public Long getUnit() {
-        return unit;
-    }
-
-    public void setUnit(Long unit) {
-        this.unit = unit;
     }
 
     public Long getTypeId() {

@@ -25,9 +25,7 @@ public class CellDao extends AbstractDao<Cell, Long> {
      */
     public static class Properties {
         public final static Property Time = new Property(0, Long.class, "time", true, "_id");
-        public final static Property HowLong = new Property(1, int.class, "howLong", false, "HOW_LONG");
-        public final static Property Unit = new Property(2, Long.class, "unit", false, "UNIT");
-        public final static Property TypeId = new Property(3, Long.class, "typeId", false, "TYPE_ID");
+        public final static Property TypeId = new Property(1, Long.class, "typeId", false, "TYPE_ID");
     }
 
 
@@ -44,9 +42,7 @@ public class CellDao extends AbstractDao<Cell, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"CELL\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: time
-                "\"HOW_LONG\" INTEGER NOT NULL ," + // 1: howLong
-                "\"UNIT\" INTEGER," + // 2: unit
-                "\"TYPE_ID\" INTEGER);"); // 3: typeId
+                "\"TYPE_ID\" INTEGER);"); // 1: typeId
     }
 
     /** Drops the underlying database table. */
@@ -63,16 +59,10 @@ public class CellDao extends AbstractDao<Cell, Long> {
         if (time != null) {
             stmt.bindLong(1, time);
         }
-        stmt.bindLong(2, entity.getHowLong());
- 
-        Long unit = entity.getUnit();
-        if (unit != null) {
-            stmt.bindLong(3, unit);
-        }
  
         Long typeId = entity.getTypeId();
         if (typeId != null) {
-            stmt.bindLong(4, typeId);
+            stmt.bindLong(2, typeId);
         }
     }
 
@@ -84,16 +74,10 @@ public class CellDao extends AbstractDao<Cell, Long> {
         if (time != null) {
             stmt.bindLong(1, time);
         }
-        stmt.bindLong(2, entity.getHowLong());
- 
-        Long unit = entity.getUnit();
-        if (unit != null) {
-            stmt.bindLong(3, unit);
-        }
  
         Long typeId = entity.getTypeId();
         if (typeId != null) {
-            stmt.bindLong(4, typeId);
+            stmt.bindLong(2, typeId);
         }
     }
 
@@ -106,9 +90,7 @@ public class CellDao extends AbstractDao<Cell, Long> {
     public Cell readEntity(Cursor cursor, int offset) {
         Cell entity = new Cell( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // time
-            cursor.getInt(offset + 1), // howLong
-            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // unit
-            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // typeId
+            cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1) // typeId
         );
         return entity;
     }
@@ -116,9 +98,7 @@ public class CellDao extends AbstractDao<Cell, Long> {
     @Override
     public void readEntity(Cursor cursor, Cell entity, int offset) {
         entity.setTime(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setHowLong(cursor.getInt(offset + 1));
-        entity.setUnit(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
-        entity.setTypeId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setTypeId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
      }
     
     @Override

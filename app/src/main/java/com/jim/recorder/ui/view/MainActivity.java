@@ -380,7 +380,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPressenter> impl
         } else if(id == R.id.nav_manager) {
             startActivity(new Intent(this, EventManagerActivity.class));
         } else if (id == R.id.nav_exchange) {
-            Intent it = new Intent(this, DayFixActivity.class);
+            Intent it = new Intent(this, DayFixNewActivity.class);
             it.putExtra("clear_other", true);
             startActivity(it);
             return true;

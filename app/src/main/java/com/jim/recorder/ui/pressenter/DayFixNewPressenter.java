@@ -99,34 +99,25 @@ public class DayFixNewPressenter extends MvpBasePresenter<DayFixView> {
                 mViewData.add(new SingleModel(Color.parseColor("#ebebeb"),false));
             }
         }
-//        DayCell dayCell = DayCellManager.getInstance().getData(mSelectDay);
-//        if (dayCell != null) {
-//            SparseArray<ViewCell> cells = dayCell.getDatas();
-//            int key;
-//            ViewCell item;
-//            SingleModel change;
-//            for (int i=0; i< cells.size(); i++) {
-//                key = cells.keyAt(i);
-//                item = cells.get(key);
-//                if (item == null)
-//                    continue;
-//                int position = (int) item.getPosition()-1;
-//                int index = (position/4)*5+position%4+1;
-//                change = mViewData.get(index);
-//                EventType eventType = EventTypeManager.getInstance().getEventType(item.getEventId());
-//                if (eventType == null) {
-//                    change.setColor(Color.parseColor("#ebebeb"));
-//                    change.setEventId(-1);
-//                    change.setName("");
-//                } else {
-//                    change.setColor(TemplateColor.getColor(eventType.getType()));
-//                    change.setEventId(item.getEventId());
-//                    change.setName(eventType.getName());
-//                }
-//
-//            }
-//
-//        }
+        List<Cell> cellList = CellManager.getInstance().getDay(mSelectDay);
+        Cell item;
+        SingleModel change;
+        for (int i = 0; i < cellList.size(); i++) {
+            item = cellList.get(i);
+            int position = (int) ((item.getTime() - mSelectDay)/(Constants.one_min * 15));
+            int index = (position/4)*5+position%4+1;
+            change = mViewData.get(index);
+            EventType eventType = EventTypeManager.getInstance().getEventType(item.getTypeId());
+            if (eventType == null) {
+                change.setColor(Color.parseColor("#ebebeb"));
+                change.setEventId(-1);
+                change.setName("");
+            } else {
+                change.setColor(TemplateColor.getColor(eventType.getType()));
+                change.setEventId(item.getTypeId());
+                change.setName(eventType.getName());
+            }
+        }
         getView().updateContent(mViewData);
     }
 
@@ -180,50 +171,36 @@ public class DayFixNewPressenter extends MvpBasePresenter<DayFixView> {
         List<Cell> storageData = new ArrayList<>();
         SingleModel item;
         long typeId = 0l;
-        long originTime = 0l;
-        int count = 0;
         for (int i=0; i<mViewData.size(); i++) {
             if (i%5 == 0)
                 continue;
             item = mViewData.get(i);
-            int position = 4*(i/5) + i%5;
-            if (typeId != item.getEventId()) {
-                //typeId == -1 为无效数据，无需处理
-                if (typeId != -1 && typeId != 0) {
-                    storageData.add(new Cell(originTime, count, typeId));
-                }
-                originTime = mSelectDay + (position-1) * Constants.one_min * 15;
-                typeId = item.getEventId();
-                count = 0;
+            typeId = item.getEventId();
+            if (typeId != -1) {
+                int position = 4*(i/5) + i%5;
+                storageData.add(new Cell(mSelectDay + (position-1) * Constants.one_min * 15, typeId));
             }
-            count++;
         }
-        if (count != 0 && typeId != -1) {
-            storageData.add(new Cell(originTime, count, typeId));
-        }
-        if (storageData.size() != 0) {
-            CellManager.getInstance().save(storageData);
-        } else {
-            CellManager.getInstance().save(storageData);
-//            DataStorage.delDayCell(dataToSave.getTime());
-        }
-    }
-
-    private Cell generate(long originTime, int howLong, long typeId) {
-        return null;
+        CellManager.getInstance().save(storageData);
     }
 
     public void wipeData(Set<Integer> selected) {
         if (selected.size() == 0)
             return;
         SingleModel change;
+        List<Long> delData = new ArrayList<>();
         for(Integer index : selected) {
             change = mViewData.get(index);
+            // 删除数据库中的数据
+            if (change.getEventId() != -1) {
+                int position = 4*(index/5) + index%5;
+                delData.add(mSelectDay + (position-1) * Constants.one_min * 15);
+            }
             change.setEventId(-1);
             change.setColor(Color.parseColor("#ebebeb"));
             change.setName("");
         }
+        CellManager.getInstance().delByKey(delData);
         getView().updateAfterFix();
-        convertToDayCell();
     }
 }

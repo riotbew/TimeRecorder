@@ -45,8 +45,6 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
             item = demo_content.getChildAt(i);
             item.setOnClickListener(this);
         }
-        startActivity(new Intent(this, DayFixNewActivity.class));
-        finish();
     }
 
     @Override
@@ -59,7 +57,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                 startActivity(it);
                 break;
             case R.id.demo2:
-                it = new Intent(this, DayFixActivity.class);
+                it = new Intent(this, DayFixNewActivity.class);
                 startActivity(it);
                 break;
         }

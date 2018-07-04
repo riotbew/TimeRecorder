@@ -53,7 +53,6 @@ public class DataStorage {
 
     public synchronized static void delEvent(Long id) {
         MyApplication.getDaoInstant().getEventTypeDao().deleteByKey(id);
-
     }
 
     public synchronized static List<EventType> getEventList() {

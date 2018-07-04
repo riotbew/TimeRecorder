@@ -24,7 +24,8 @@ public class CellManager {
 
     public List<Cell> getDay(long originTime) {
         return MyApplication.getDaoInstant().getCellDao().queryBuilder()
-                .where(CellDao.Properties.Time.between(String.valueOf(originTime), String.valueOf(originTime+ Constants.one_day)))
+                .where(CellDao.Properties.Time.between(String.valueOf(originTime),
+                        String.valueOf(originTime+ Constants.one_day - Constants.one_min*15)))
                 .orderAsc(CellDao.Properties.Time)
                 .list();
     }

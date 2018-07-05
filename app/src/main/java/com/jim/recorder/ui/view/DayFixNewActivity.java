@@ -1,17 +1,18 @@
 package com.jim.recorder.ui.view;
 
+import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -27,7 +28,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.codbking.calendar.CaledarAdapter;
 import com.codbking.calendar.CalendarBean;
 import com.codbking.calendar.CalendarDateView;
 import com.codbking.calendar.CalendarLayout;
@@ -43,12 +43,12 @@ import com.jim.recorder.model.Constants;
 import com.jim.recorder.model.EventType;
 import com.jim.recorder.ui.callback.DayFixView;
 import com.jim.recorder.ui.custom.AutoSelectAdapter;
+import com.jim.recorder.ui.custom.CalendarAdapter;
 import com.jim.recorder.ui.custom.DayFixContentHeaderDelegate;
 import com.jim.recorder.ui.custom.DragSelectTouchListener;
 import com.jim.recorder.ui.custom.DragSelectionProcessor;
 import com.jim.recorder.ui.model.SingleModel;
 import com.jim.recorder.ui.pressenter.DayFixNewPressenter;
-import com.jim.recorder.ui.pressenter.DayFixPressenter;
 import com.jim.recorder.utils.CalendarUtil;
 import com.jim.recorder.utils.DensityUtil;
 import com.jim.recorder.utils.TemplateColor;
@@ -65,10 +65,10 @@ public class DayFixNewActivity extends BaseMvpActivity<DayFixView, DayFixNewPres
 
     ListView mEventsView;
     RecyclerView mContent;
+    View mFooter;
     CommonLVAdapter<EventType> rightAdapter;
     AutoSelectAdapter<SingleModel> leftAdapter;
     CalendarDateView mCalendarDateView;
-    TextView mTitle;
     DragSelectTouchListener mDragSelectTouchListener;
     private boolean mIntercept = false;
 
@@ -92,8 +92,7 @@ public class DayFixNewActivity extends BaseMvpActivity<DayFixView, DayFixNewPres
         super.onCreate(savedInstanceState);
         getPresenter().updateTimeCalendar();
         setContentView(R.layout.activity_day_fix_main);
-        IntentFilter itf = new IntentFilter(Constants.TIME_RECORDER_EVENT_UPDATE);
-        registerReceiver(mReceiver, itf);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(Constants.TIME_RECORDER_EVENT_UPDATE));
     }
 
     @Override
@@ -104,7 +103,7 @@ public class DayFixNewActivity extends BaseMvpActivity<DayFixView, DayFixNewPres
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(mReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         super.onDestroy();
     }
 
@@ -123,14 +122,14 @@ public class DayFixNewActivity extends BaseMvpActivity<DayFixView, DayFixNewPres
         initCalendar();
         getPresenter().refreshData();
         //lb底部标签管理器
-        View view = LayoutInflater.from(this).inflate(R.layout.layout_label_footer, mEventsView,false);
-        view.setOnClickListener(new View.OnClickListener() {
+        mFooter = LayoutInflater.from(this).inflate(R.layout.layout_label_footer, mEventsView,false);
+        mFooter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), EventManagerActivity.class));
             }
         });
-        mEventsView.addFooterView(view);
+        mEventsView.addFooterView(mFooter);
         getPresenter().updateTitle();
     }
 
@@ -140,31 +139,12 @@ public class DayFixNewActivity extends BaseMvpActivity<DayFixView, DayFixNewPres
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void initCalendar() {
-        mCalendarDateView.setAdapter(new CaledarAdapter() {
-            @Override
-            public View getView(View convertView, ViewGroup parentView, CalendarBean bean) {
-                TextView view;
-                if (convertView == null) {
-                    convertView = LayoutInflater.from(parentView.getContext()).inflate(R.layout.layout_item_calendar, null);
-                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(px(48), px(48));
-                    convertView.setLayoutParams(params);
-                }
-                view = convertView.findViewById(R.id.text);
-                view.setText("" + bean.day);
-                if (bean.mothFlag != 0) {
-                    view.setTextColor(0xff9299a1);
-                } else {
-                    view.setTextColor(0xffffffff);
-                }
-                return convertView;
-            }
-        });
+        mCalendarDateView.setAdapter(new CalendarAdapter());
         mCalendarDateView.setOnItemClickListener(new CalendarView.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion, CalendarBean bean) {
@@ -175,13 +155,6 @@ public class DayFixNewActivity extends BaseMvpActivity<DayFixView, DayFixNewPres
             }
         });
     }
-
-    public int px(float dipValue) {
-        Resources r=Resources.getSystem();
-        final float scale =r.getDisplayMetrics().density;
-        return (int) (dipValue * scale + 0.5f);
-    }
-
 
     public void updateContent(List<SingleModel> viewData) {
         leftAdapter = new AutoSelectAdapter<SingleModel>(this, viewData);
@@ -254,6 +227,8 @@ public class DayFixNewActivity extends BaseMvpActivity<DayFixView, DayFixNewPres
             });
         }
         mContent.addOnItemTouchListener(mDragSelectTouchListener);
+        ViewGroup.LayoutParams layoutParams = mContent.getLayoutParams();
+
     }
 
     public void updateLeftCell(View v, SingleModel singleModel, int position) {
@@ -316,10 +291,10 @@ public class DayFixNewActivity extends BaseMvpActivity<DayFixView, DayFixNewPres
 
     @Override
     public void updateTitle(String text) {
-        if (mTitle == null) {
-            mTitle = findViewById(R.id.tool_bar_title);
+        TextView title = findViewById(R.id.tool_bar_title);
+        if (title == null) {
+            title.setText(text);
         }
-        mTitle.setText(text);
     }
 
     @Override
@@ -370,6 +345,13 @@ public class DayFixNewActivity extends BaseMvpActivity<DayFixView, DayFixNewPres
     private Snackbar selectIndicator;
     @Override
     public void updateSelectedIndicator(int count) {
+        if (count == 0) {
+            if (selectIndicator != null && selectIndicator.isShown()) {
+                selectIndicator.dismiss();
+                adjustContentHeight(false);
+            }
+            return;
+        }
         if (selectIndicator == null) {
             selectIndicator = getSnackbar("");
             selectIndicator.setAction("抹除", new View.OnClickListener() {
@@ -380,12 +362,32 @@ public class DayFixNewActivity extends BaseMvpActivity<DayFixView, DayFixNewPres
             });
         }
         selectIndicator.setText(getPresenter().toFormatTime(count));
-        if (count == 0) {
-            selectIndicator.dismiss();
-            return;
-        }
         if (!selectIndicator.isShown()) {
             selectIndicator.show();
+            adjustContentHeight(true);
         }
+    }
+
+    private void adjustContentHeight(boolean show) {
+        if (selectIndicator != null && show) {
+            if (selectIndicator.getView().getHeight() == 0)
+                mContent.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (selectIndicator.isShown())
+                            addPaddingBottom(selectIndicator.getView().getHeight());
+                    }
+                },1000);
+            else
+                addPaddingBottom(selectIndicator.getView().getHeight());
+        } else
+            addPaddingBottom(0);
+    }
+
+    private void addPaddingBottom(int padding) {
+        if (mContent.getPaddingBottom() == padding)
+            return;
+        mContent.setPadding(0,0,0,padding);
+        mFooter.setPadding(0,0,0,padding);
     }
 }

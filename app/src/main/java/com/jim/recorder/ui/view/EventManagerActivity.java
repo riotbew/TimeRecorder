@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -91,7 +92,7 @@ public class EventManagerActivity extends BaseMvpActivity<EventManagerView, Even
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != 0) {
-            sendBroadcast(new Intent(Constants.TIME_RECORDER_EVENT_UPDATE));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.TIME_RECORDER_EVENT_UPDATE));
             mAdapter.notifyDataSetChanged();
             mContent.smoothScrollToPosition(EventTypeManager.getInstance().getEventList().size());
         }
@@ -107,7 +108,7 @@ public class EventManagerActivity extends BaseMvpActivity<EventManagerView, Even
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 getPresenter().delEvent(eventType);
-                sendBroadcast(new Intent(Constants.TIME_RECORDER_EVENT_UPDATE));
+                LocalBroadcastManager.getInstance(EventManagerActivity.this).sendBroadcast(new Intent(Constants.TIME_RECORDER_EVENT_UPDATE));
                 dialog.dismiss();
             }
         }, false);

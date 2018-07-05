@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
@@ -70,7 +71,9 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
         super.setContentView(layoutResID);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setToolBar(toolbar);
+        Log.e(this.getClass().getSimpleName(), String.valueOf(System.currentTimeMillis()));
         initView();
+        Log.e(this.getClass().getSimpleName(), String.valueOf(System.currentTimeMillis()));
     }
 
     protected void setToolBar(Toolbar toolBar) {

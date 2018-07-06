@@ -23,6 +23,10 @@ allprojects {
     }
 }
 
+subprojects {
+    apply from: "${project.rootDir}/settings/common.gradle"
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

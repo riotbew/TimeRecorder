@@ -1,7 +1,9 @@
 package com.jim.recorder.ui.view;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,6 +34,7 @@ import com.jim.recorder.utils.TemplateColor;
 public class EventManagerActivity extends BaseMvpActivity<EventManagerView, EventTypePressenter> implements EventManagerView{
 
     final int ADD_EVENT = 0;
+
 
     CommonAdapter mAdapter;
     RecyclerView mContent;
@@ -64,12 +67,35 @@ public class EventManagerActivity extends BaseMvpActivity<EventManagerView, Even
                         handleDelAction(eventType);
                     }
                 });
+                holder.getView(R.id.event_setting).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToAddEvent(eventType.get_id());
+                    }
+                });
             }
         };
         mContent.setAdapter(mAdapter);
         mContent.setLayoutManager(new LinearLayoutManager(this));
-        mContent.addOnItemTouchListener(new SwipeItemLayout.OnSwipeItemTouchListener(this));
+        final SwipeItemLayout.OnSwipeItemTouchListener listener = new SwipeItemLayout.OnSwipeItemTouchListener(this);
+        mContent.addOnItemTouchListener(listener);
         mContent.addItemDecoration(new MyDecoration(this, LinearLayoutManager.VERTICAL));
+        SharedPreferences sp = this.getSharedPreferences(Constants.SETTING_NAME, Context.MODE_PRIVATE);
+        if (sp!=null && !sp.contains(Constants.FIRST_OPEN_EVENT_MG)) {
+            mContent.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    View view = mContent.getChildAt(0);
+                    if (view != null && view instanceof SwipeItemLayout) {
+                        SwipeItemLayout layout = (SwipeItemLayout)view;
+                        layout.open();
+                        listener.setCaptureItem(layout);
+                    }
+                }
+            },100);
+            sp.edit().putBoolean(Constants.FIRST_OPEN_EVENT_MG, true).apply();
+        }
+
     }
 
     @Override
@@ -88,10 +114,14 @@ public class EventManagerActivity extends BaseMvpActivity<EventManagerView, Even
         startActivityForResult(new Intent(this, AddEventActivity.class), ADD_EVENT);
     }
 
+    private void goToAddEvent(long id) {
+        startActivityForResult(new Intent(this, AddEventActivity.class).putExtra(Constants.MODIFY_EVENT_ID, id), ADD_EVENT);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != 0) {
+        if (resultCode == 1) {
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.TIME_RECORDER_EVENT_UPDATE));
             mAdapter.notifyDataSetChanged();
             mContent.smoothScrollToPosition(EventTypeManager.getInstance().getEventList().size());

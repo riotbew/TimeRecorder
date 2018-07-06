@@ -9,6 +9,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="5dp"
-        android:text="更多事件类型"/>
+        android:text="更多标签类型"/>
 
 </FrameLayout>

@@ -292,9 +292,8 @@ public class DayFixNewActivity extends BaseMvpActivity<DayFixView, DayFixNewPres
     @Override
     public void updateTitle(String text) {
         TextView title = findViewById(R.id.tool_bar_title);
-        if (title == null) {
+        if (title != null)
             title.setText(text);
-        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.jim.recorder.api;
 
+import com.jim.recorder.MyApplication;
 import com.jim.recorder.model.EventType;
 
 import java.util.List;
@@ -36,6 +37,10 @@ public class EventTypeManager {
         mEvents.add(event);
         DataStorage.addEvent(event);
         return true;
+    }
+
+    public synchronized void updateEvent(EventType eventType) {
+        MyApplication.getDaoInstant().getEventTypeDao().updateInTx(eventType);
     }
 
     public synchronized EventType getEventType(Long id) {

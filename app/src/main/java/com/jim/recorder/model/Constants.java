@@ -18,4 +18,10 @@ public class Constants {
 
     // name of activity
     public static final String TIME_RECORDER_MENUACTIVITY = "TIME_RECORDER_MENUACTIVITY";
+
+    public static final String SETTING_NAME = "TR_SETTING";
+
+    public static final String FIRST_OPEN_EVENT_MG = "FIRST_OPEN_EVENT_MG";
+
+    public static final String MODIFY_EVENT_ID = "MODIFY_EVENT_ID";
 }

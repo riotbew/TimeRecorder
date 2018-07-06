@@ -743,6 +743,10 @@ public class SwipeItemLayout extends ViewGroup {
             }
         }
 
+        public void setCaptureItem(SwipeItemLayout item) {
+            captureItem = item;
+        }
+
     }
 
 }

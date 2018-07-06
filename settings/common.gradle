@@ -1,0 +1,26 @@
+
+project.ext {
+    javaVersion = 7
+    javaMaxHeapSize = '4G'
+
+    compileSdkVersion = 26
+    minSdkVersion = 16
+    targetSdkVersion = 26
+
+}
+
+
+def getJavaVersion() {
+    switch (project.ext.javaVersion) {
+        case "6":
+            return JavaVersion.VERSION_1_6
+        case "7":
+            return JavaVersion.VERSION_1_7
+        case "8":
+            return JavaVersion.VERSION_1_8
+        case "9":
+            return JavaVersion.VERSION_1_9
+        default:
+            return JavaVersion.VERSION_1_6
+    }
+}

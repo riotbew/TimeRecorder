@@ -25,6 +25,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Scheduler;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by Tauren on 2018/5/19.
  */
@@ -34,6 +41,7 @@ public class DayFixNewPressenter extends MvpBasePresenter<DayFixView> {
     private long mSelectDay = -1;
     private Calendar mNowCalendar;
     private List<SingleModel> mViewData;
+    private final int MAX_SIZE = 120;
 
     public List<EventType> getEventTypes() {
         return EventTypeManager.getInstance().getEventList();
@@ -93,11 +101,10 @@ public class DayFixNewPressenter extends MvpBasePresenter<DayFixView> {
         }
         mViewData.clear();
         for (int i=0; i< 120; i++) {
-            if (i%5 == 0) {
+            if (i%5 == 0)
                 mViewData.add(new SingleModel(true));
-            } else {
+            else
                 mViewData.add(new SingleModel(Color.parseColor("#ebebeb"),false));
-            }
         }
         List<Cell> cellList = CellManager.getInstance().getDay(mSelectDay);
         Cell item;
@@ -119,6 +126,7 @@ public class DayFixNewPressenter extends MvpBasePresenter<DayFixView> {
             }
         }
         getView().updateContent(mViewData);
+//        Observable.fromArray(cellList.toArray())
     }
 
     public void handleLeftClick(View view, int position) {

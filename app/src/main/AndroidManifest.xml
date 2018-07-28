@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jim.recorder">
+    
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".MyApplication"
@@ -38,6 +40,9 @@
             android:screenOrientation="portrait"/>
 
         <activity android:name=".ui.view.AddEventActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".demo.RxJavaActivity"
             android:screenOrientation="portrait"/>
     </application>
 

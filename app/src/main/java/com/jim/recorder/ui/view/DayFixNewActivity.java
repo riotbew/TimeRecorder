@@ -1,6 +1,5 @@
 package com.jim.recorder.ui.view;
 
-import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;

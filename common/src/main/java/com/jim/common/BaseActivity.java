@@ -56,6 +56,7 @@ public class BaseActivity extends AppCompatActivity {
         super.setContentView(layoutResID);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setToolBar(toolbar);
+        initData();
         initView();
     }
 
@@ -67,6 +68,10 @@ public class BaseActivity extends AppCompatActivity {
      * 必须在setcontentView前准备好数据
      */
     protected void initView() {
+    }
+
+    protected void initData() {
+
     }
 
     protected void setToolBar(Toolbar toolBar) {
